@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentHomeBinding
+import com.example.mysocialmediaapp.ui.adapters.DashBoardAdapter
 import com.example.mysocialmediaapp.ui.adapters.StoryAdapter
+import com.example.mysocialmediaapp.ui.models.DashBoardModel
 import com.example.mysocialmediaapp.ui.models.StoryModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,7 +20,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private var storyModel: ArrayList<StoryModel> = ArrayList()
+    private var storyList: ArrayList<StoryModel> = ArrayList()
+    private var dashBoardList: ArrayList<DashBoardModel> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,8 +30,15 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        setUpStoryRecyclerView()
+        setUpDashBoardRecyclerView()
+
+        return binding.root
+    }
+
+    private fun setUpStoryRecyclerView() {
         // Example for checking that our RecyclerView works fine
-        storyModel.add(
+        storyList.add(
             StoryModel(
                 R.drawable.cute_dog,
                 R.drawable.live_icon,
@@ -36,7 +46,7 @@ class HomeFragment : Fragment() {
                 "Cool"
             )
         )
-        storyModel.add(
+        storyList.add(
             StoryModel(
                 R.drawable.cute_dog,
                 R.drawable.live_icon,
@@ -44,7 +54,7 @@ class HomeFragment : Fragment() {
                 "Cool"
             )
         )
-        storyModel.add(
+        storyList.add(
             StoryModel(
                 R.drawable.cute_dog,
                 R.drawable.live_icon,
@@ -52,7 +62,7 @@ class HomeFragment : Fragment() {
                 "Cool"
             )
         )
-        storyModel.add(
+        storyList.add(
             StoryModel(
                 R.drawable.cute_dog,
                 R.drawable.live_icon,
@@ -62,14 +72,55 @@ class HomeFragment : Fragment() {
         )
         // in future remove this custom added data
 
-        val mAdapter = StoryAdapter(requireContext(), storyModel)
+        val mAdapter = StoryAdapter(requireContext(), storyList)
 
         binding.storyRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.storyRecyclerView.isNestedScrollingEnabled = false
         binding.storyRecyclerView.adapter = mAdapter
+    }
+    private fun setUpDashBoardRecyclerView() {
+        dashBoardList.add(
+            DashBoardModel(
+                R.drawable.cute_dog,
+                R.drawable.kid,
+                10,
+                "Mr Singh",
+                "Cool Personality",
+                "200",
+                "100",
+                "20"
+            )
+        )
+        dashBoardList.add(
+            DashBoardModel(
+                R.drawable.cute_dog,
+                R.drawable.kid,
+                10,
+                "Mr Singh",
+                "Cool Personality",
+                "200",
+                "100",
+                "20"
+            )
+        )
+        dashBoardList.add(
+            DashBoardModel(
+                R.drawable.cute_dog,
+                R.drawable.kid,
+                10,
+                "Mr Singh",
+                "Cool Personality",
+                "200",
+                "100",
+                "20"
+            )
+        )
 
-        return binding.root
+
+        binding.dashBoardRV.layoutManager = LinearLayoutManager(requireContext())
+        binding.storyRecyclerView.isNestedScrollingEnabled = false
+        binding.dashBoardRV.adapter = DashBoardAdapter(requireContext(), dashBoardList)
     }
 
     override fun onDestroyView() {

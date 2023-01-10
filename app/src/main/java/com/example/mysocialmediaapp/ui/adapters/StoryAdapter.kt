@@ -25,8 +25,8 @@ class StoryAdapter(
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        holder.binding.storyImg.setImageResource(storyModel[position].story)
-        holder.binding.profileImage.setImageResource(storyModel[position].profile)
+        holder.binding.storyImgVw.setImageResource(storyModel[position].story)
+        holder.binding.profileImgVw.setImageResource(storyModel[position].profile)
         holder.binding.storyType.setImageResource(storyModel[position].storyType)
         holder.binding.nameStory.text = storyModel[position].nameStory
     }

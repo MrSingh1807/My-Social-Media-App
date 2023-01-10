@@ -23,10 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/storyImg"
+            android:id="@+id/storyImgVw"
             android:layout_width="160dp"
             android:layout_height="100dp"
-            android:layout_marginStart="5dp"
             android:scaleType="centerCrop"
             android:src="@drawable/kid"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -35,18 +34,18 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/profileImgVw"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:padding="3dp"
                 android:src="@drawable/cute_dog"
-                app:layout_constraintBottom_toBottomOf="@+id/storyImg"
-                app:layout_constraintEnd_toEndOf="@+id/storyImg"
+                app:layout_constraintBottom_toBottomOf="@+id/storyImgVw"
+                app:layout_constraintEnd_toEndOf="@+id/storyImgVw"
                 app:layout_constraintHorizontal_bias="0.05"
-                app:layout_constraintStart_toStartOf="@+id/storyImg"
-                app:layout_constraintTop_toTopOf="@+id/storyImg"
+                app:layout_constraintStart_toStartOf="@+id/storyImgVw"
+                app:layout_constraintTop_toTopOf="@+id/storyImgVw"
                 app:layout_constraintVertical_bias="0.050000012" />
 
             <View
@@ -54,11 +53,11 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/image_circle_background"
-                app:layout_constraintBottom_toBottomOf="@+id/profile_image"
-                app:layout_constraintEnd_toEndOf="@+id/profile_image"
+                app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
+                app:layout_constraintEnd_toEndOf="@+id/profileImgVw"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/profile_image"
-                app:layout_constraintTop_toTopOf="@+id/profile_image"
+                app:layout_constraintStart_toStartOf="@+id/profileImgVw"
+                app:layout_constraintTop_toTopOf="@+id/profileImgVw"
                 app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
@@ -68,8 +67,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="@+id/storyImg"
-                app:layout_constraintTop_toTopOf="@+id/storyImg"
+                app:layout_constraintEnd_toEndOf="@+id/storyImgVw"
+                app:layout_constraintTop_toTopOf="@+id/storyImgVw"
                 app:srcCompat="@drawable/live_icon" />
 
             <TextView
@@ -81,8 +80,8 @@
                 android:textSize="18sp"
                 android:text="Mr Singh"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/storyImg"
-                app:layout_constraintStart_toStartOf="@+id/storyImg" />
+                app:layout_constraintBottom_toBottomOf="@+id/storyImgVw"
+                app:layout_constraintStart_toStartOf="@+id/storyImgVw" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
