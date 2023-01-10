@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    Design a background for make ImageView As a Circular-->
+
+    <item>
+        <shape android:shape="oval">
+            <stroke
+                android:color="#E88606"
+                android:width="2dp"
+                android:dashWidth="11dp"/>
+        </shape>
+    </item>
+</layer-list>
