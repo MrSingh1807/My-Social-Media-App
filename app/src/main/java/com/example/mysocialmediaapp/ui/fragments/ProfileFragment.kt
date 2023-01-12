@@ -28,6 +28,7 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
+
         setFriendsListRecyclerView()
 
         return binding.root

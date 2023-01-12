@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentAddBinding
 import com.example.mysocialmediaapp.databinding.FragmentNotificationBinding
+import com.example.mysocialmediaapp.ui.adapters.ViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +23,9 @@ class NotificationFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentNotificationBinding.inflate(inflater, container, false)
+
+        binding.notificationViewPager.adapter = fragmentManager?.let { ViewPagerAdapter(it) }
+        binding.notificationTabLayout.setupWithViewPager(binding.notificationViewPager)
 
         return binding.root
     }

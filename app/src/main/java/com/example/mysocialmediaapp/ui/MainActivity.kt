@@ -1,8 +1,11 @@
 package com.example.mysocialmediaapp.ui
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -37,13 +40,23 @@ class MainActivity : AppCompatActivity() {
                 R.id.profileFragment
             )
         )
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id == R.id.profileFragment) {
+                setSupportActionBar(binding.toolbar)
+                binding.toolbar.visibility = View.VISIBLE
+            } else {
+                supportActionBar?.hide()
+                binding.toolbar.visibility = View.GONE
+            }
+        }
 
         binding.btmNavView.setupWithNavController(navController)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+//        setupActionBarWithNavController(navController, appBarConfiguration)
 
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
 }

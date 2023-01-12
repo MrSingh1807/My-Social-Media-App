@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImgVw"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="3dp"
+        android:src="@drawable/cute_dog"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/image_circle_background"
+        app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
+        app:layout_constraintEnd_toEndOf="@+id/profileImgVw"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/profileImgVw"
+        app:layout_constraintTop_toTopOf="@+id/profileImgVw"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/nameAndAboutTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:lines="2"
+        android:text="Mr Singh"
+        android:textColor="@color/titleColor"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profileImgVw"
+        app:layout_constraintTop_toTopOf="@+id/profileImgVw"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <TextView
+        android:id="@+id/timeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="just now"
+        app:layout_constraintStart_toStartOf="@+id/nameAndAboutTV"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndAboutTV" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

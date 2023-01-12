@@ -8,6 +8,7 @@
         android:id="@+id/friendsImageIV"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginEnd="8dp"
         android:padding="3dp"
         android:src="@drawable/cute_dog"
         app:civ_border_color="@color/imageBorderColor"
