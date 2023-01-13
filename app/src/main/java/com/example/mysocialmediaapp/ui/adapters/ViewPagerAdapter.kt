@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.mysocialmediaapp.ui.fragments.RequestFragment
-import com.example.mysocialmediaapp.ui.fragments.TabNotificationFragment
+import com.example.mysocialmediaapp.ui.fragments.notificationfragments.TabNotificationFragment
 
 class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
 
