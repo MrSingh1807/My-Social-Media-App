@@ -109,7 +109,7 @@
             android:padding="15dp">
 
             <EditText
-                android:id="@+id/signInUserNameET"
+                android:id="@+id/signUpUserNameET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -118,7 +118,7 @@
                 android:minHeight="48dp" />
 
             <EditText
-                android:id="@+id/signInUserProfessionET"
+                android:id="@+id/signUpUserProfessionET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -128,18 +128,18 @@
                 android:minHeight="48dp" />
 
             <EditText
-                android:id="@+id/signInEmailET"
+                android:id="@+id/signUpEmailET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:ems="10"
-                android:hint="EMAIL"
+                android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp" />
 
             <EditText
-                android:id="@+id/singInPasswordET"
+                android:id="@+id/singUpPasswordET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"

@@ -1,15 +1,17 @@
 package com.example.mysocialmediaapp.ui.fragments.signinorloginfragments
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentSignUpBinding
-import com.example.mysocialmediaapp.ui.MainActivity
+import com.example.mysocialmediaapp.ui.models.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 
 class SignUpFragment : Fragment() {
@@ -17,20 +19,47 @@ class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentSignUpBinding.inflate(inflater, container,false)
+        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
+
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
 
         binding.forSignInTV.setOnClickListener {
-        findNavController().popBackStack()
+            findNavController().popBackStack()
         }
 
         binding.signUpBTN.setOnClickListener {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
+
+            val userName = binding.signUpUserNameET.text.toString().trim()
+            val profession = binding.signUpUserProfessionET.text.toString().trim()
+            val email = binding.signUpEmailET.text.toString().trim()
+            val password = binding.singUpPasswordET.text.toString().trim()
+
+            if (userName.isNullOrEmpty() || profession.isNullOrEmpty() || email.isNullOrEmpty() || password.isNullOrEmpty()) {
+                Toast.makeText(context, "Please Enter Email and Password", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnSuccessListener {
+                        val user = User(userName, profession, email, password)
+                        val id = it.user!!.uid
+                        database.getReference("Users").child(id).setValue(user)
+
+                        Toast.makeText(context, "User Created", Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Authentication Failed", Toast.LENGTH_SHORT).show()
+                        Log.d("SignUp", it.message.toString())
+                    }
+            }
         }
 
         return binding.root
