@@ -11,7 +11,9 @@ import com.example.mysocialmediaapp.databinding.FragmentRequestBinding
 import com.example.mysocialmediaapp.databinding.FragmentTabNotificationBinding
 import com.example.mysocialmediaapp.ui.adapters.NotificationAdapter
 import com.example.mysocialmediaapp.ui.models.NotificationModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TabNotificationFragment : Fragment() {
 
     private var _binding: FragmentTabNotificationBinding? = null

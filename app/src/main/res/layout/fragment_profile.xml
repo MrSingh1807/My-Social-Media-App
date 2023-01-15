@@ -8,7 +8,7 @@
 
 
     <ImageView
-        android:id="@+id/backgroundProfileIV"
+        android:id="@+id/coverProfileIV"
         android:layout_width="wrap_content"
         android:layout_height="250dp"
         android:scaleType="centerCrop"
@@ -19,14 +19,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/view4"
+        android:id="@+id/changeCoverProfileView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/darkTransparent"
-        app:layout_constraintBottom_toBottomOf="@id/backgroundProfileIV"
-        app:layout_constraintEnd_toEndOf="@id/backgroundProfileIV"
-        app:layout_constraintStart_toStartOf="@id/backgroundProfileIV"
-        app:layout_constraintTop_toTopOf="@id/backgroundProfileIV" />
+        app:layout_constraintBottom_toBottomOf="@id/coverProfileIV"
+        app:layout_constraintEnd_toEndOf="@id/coverProfileIV"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/coverProfileIV"
+        app:layout_constraintTop_toTopOf="@id/coverProfileIV"
+        app:layout_constraintVertical_bias="0.0" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImgVw"
@@ -36,14 +38,14 @@
         android:src="@drawable/cute_dog"
         app:civ_border_color="@color/white"
         app:civ_border_width="5dp"
-        app:layout_constraintBottom_toBottomOf="@id/backgroundProfileIV"
-        app:layout_constraintEnd_toEndOf="@+id/backgroundProfileIV"
+        app:layout_constraintBottom_toBottomOf="@id/coverProfileIV"
+        app:layout_constraintEnd_toEndOf="@+id/coverProfileIV"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toStartOf="@id/backgroundProfileIV"
-        app:layout_constraintTop_toBottomOf="@id/backgroundProfileIV" />
+        app:layout_constraintStart_toStartOf="@id/coverProfileIV"
+        app:layout_constraintTop_toBottomOf="@id/coverProfileIV" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/changeProfilePicView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
@@ -58,11 +60,11 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/check"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintBottom_toBottomOf="@+id/changeProfilePicView"
+        app:layout_constraintEnd_toEndOf="@+id/changeProfilePicView"
         app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/changeProfilePicView"
+        app:layout_constraintTop_toTopOf="@+id/changeProfilePicView"
         app:layout_constraintVertical_bias="0.825" />
 
     <TextView
@@ -138,7 +140,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/view6"
-        app:layout_constraintTop_toBottomOf="@+id/backgroundProfileIV" />
+        app:layout_constraintTop_toBottomOf="@+id/coverProfileIV" />
 
     <ImageView
         android:id="@+id/callIV"

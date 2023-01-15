@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.5" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/changeProfilePicView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/friendsImageIV"

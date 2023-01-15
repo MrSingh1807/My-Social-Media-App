@@ -9,7 +9,9 @@ import com.example.mysocialmediaapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LogInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLogInBinding
