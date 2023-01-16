@@ -92,4 +92,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     //RealTime Database
     implementation 'com.google.firebase:firebase-database-ktx'
+    //Storage
+    implementation 'com.google.firebase:firebase-storage-ktx'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.8'
 }

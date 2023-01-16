@@ -23,7 +23,7 @@ class DashBoardAdapter(
 
     override fun onBindViewHolder(holder: DashBoardHolder, position: Int) {
         holder.binding.profileImgVw.setImageResource(dashBoardModel[position].profile)
-        holder.binding.nameTV.text = dashBoardModel[position].name
+        holder.binding.userNameTV.text = dashBoardModel[position].name
         holder.binding.aboutTV.text = dashBoardModel[position].about
 
         holder.binding.storyImgVw.setImageResource(dashBoardModel[position].postImage)
