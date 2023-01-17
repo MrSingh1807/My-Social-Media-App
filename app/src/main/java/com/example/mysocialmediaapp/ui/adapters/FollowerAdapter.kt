@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mysocialmediaapp.databinding.FriendsRvInProfileBinding
-import com.example.mysocialmediaapp.ui.models.MyFriendsProfileImageModel
+import com.example.mysocialmediaapp.ui.models.FollowModel
 
-class MyFriendProfileAdapter(
+class FollowerAdapter(
     val context: Context,
-    private var myFriendsModel: ArrayList<MyFriendsProfileImageModel> = ArrayList()
+    private var myFriendsModel: ArrayList<FollowModel> = ArrayList()
 
-) : RecyclerView.Adapter<MyFriendProfileAdapter.MyFriendProfileViewHolder>() {
+) : RecyclerView.Adapter<FollowerAdapter.MyFriendProfileViewHolder>() {
 
     class MyFriendProfileViewHolder(val binding: FriendsRvInProfileBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -24,7 +24,7 @@ class MyFriendProfileAdapter(
     }
 
     override fun onBindViewHolder(holder: MyFriendProfileViewHolder, position: Int) {
-        holder.binding.friendsImageIV.setImageResource(myFriendsModel[position].profileImage)
+//        holder.binding.friendsImageIV.setImageResource(myFriendsModel[position].profileImage)
     }
 
     override fun getItemCount(): Int {

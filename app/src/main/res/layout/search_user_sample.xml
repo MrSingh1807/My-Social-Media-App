@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImgVw"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:padding="3dp"
+        android:src="@drawable/cute_dog"
+        app:civ_border_color="@color/black"
+        app:civ_border_width="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/changeProfilePicView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
+        app:layout_constraintEnd_toEndOf="@+id/profileImgVw"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/profileImgVw"
+        app:layout_constraintTop_toTopOf="@+id/profileImgVw"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/userNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="Name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/userProfessionTV"
+        app:layout_constraintStart_toEndOf="@+id/profileImgVw"
+        app:layout_constraintTop_toTopOf="@+id/profileImgVw"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/userProfessionTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Profession"
+        app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
+        app:layout_constraintStart_toStartOf="@+id/userNameTV"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTV" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/followBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/follow_btn_bg"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+
+        android:text="Follow"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.55" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

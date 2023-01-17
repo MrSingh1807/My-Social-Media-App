@@ -1,6 +1,5 @@
 package com.example.mysocialmediaapp.ui.fragments
 
-import android.R.attr.bitmap
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -10,16 +9,14 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentProfileBinding
-import com.example.mysocialmediaapp.ui.adapters.MyFriendProfileAdapter
-import com.example.mysocialmediaapp.ui.models.MyFriendsProfileImageModel
+import com.example.mysocialmediaapp.ui.adapters.FollowerAdapter
+import com.example.mysocialmediaapp.ui.models.FollowModel
 import com.example.mysocialmediaapp.ui.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -30,8 +27,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.nio.ByteBuffer
 
 
 @AndroidEntryPoint
@@ -40,7 +35,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private var myFriendsList: ArrayList<MyFriendsProfileImageModel> = ArrayList()
+    private var myFriendsList: ArrayList<FollowModel> = ArrayList()
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseStorage: FirebaseStorage
@@ -77,7 +72,7 @@ class ProfileFragment : Fragment() {
             val alert = AlertDialog.Builder(requireContext())
                 .setTitle("Upload Image")
                 .setMessage("Update Your Cover Photo")
-                .setPositiveButton("Camera") { dialogInterface, i ->
+                .setPositiveButton("Camera") { dialogInterface, int ->
                     val intentCamera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     pickProfileImageFromCamera.launch(intentCamera)
                 }
@@ -198,20 +193,30 @@ class ProfileFragment : Fragment() {
 
 
     private fun setFriendsListRecyclerView() {
-        myFriendsList.add(MyFriendsProfileImageModel(R.drawable.cute_dog))
-        myFriendsList.add(MyFriendsProfileImageModel(R.drawable.cute_dog))
-        myFriendsList.add(MyFriendsProfileImageModel(R.drawable.cute_dog))
-        myFriendsList.add(MyFriendsProfileImageModel(R.drawable.cute_dog))
-        myFriendsList.add(MyFriendsProfileImageModel(R.drawable.cute_dog))
-        myFriendsList.add(MyFriendsProfileImageModel(R.drawable.cute_dog))
-        myFriendsList.add(MyFriendsProfileImageModel(R.drawable.cute_dog))
 
-        val friendAdapter = MyFriendProfileAdapter(requireContext(), myFriendsList)
+        val friendAdapter = FollowerAdapter(requireContext(), myFriendsList)
         binding.friendsProfileRV.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.friendsProfileRV.isNestedScrollingEnabled = false
         binding.friendsProfileRV.adapter = friendAdapter
 
+        firebaseDatabase.reference
+            .child("Users")
+            .child("follower")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for ( DataSnapShot in snapshot.children){
+                        val follow = DataSnapShot.getValue(FollowModel::class.java)!!
+                        myFriendsList.add(follow)
+                    }
+                    friendAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
     }
 
     override fun onDestroyView() {

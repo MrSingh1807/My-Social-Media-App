@@ -2,22 +2,18 @@ package com.example.mysocialmediaapp.ui.fragments.signinorloginfragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentLogInBinding
-import com.example.mysocialmediaapp.ui.MainActivity
+import com.example.mysocialmediaapp.ui.UI.MainActivity
 import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LogInFragment : Fragment() {

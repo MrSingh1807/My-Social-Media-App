@@ -1,14 +1,10 @@
-package com.example.mysocialmediaapp.ui
+package com.example.mysocialmediaapp.ui.UI
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.ActivityLogInBinding
-import com.example.mysocialmediaapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

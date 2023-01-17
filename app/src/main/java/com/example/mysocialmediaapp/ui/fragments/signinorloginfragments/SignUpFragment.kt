@@ -61,7 +61,7 @@ class SignUpFragment : Fragment() {
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnSuccessListener {
                         if (userName.isNotEmpty() || profession.isNotEmpty()) {
-                            val user = User(userName, profession, email, password)
+                            val user = User(userName, profession, email = email, password = password)
                             val id = it.user!!.uid
                             database.getReference("Users").child(id).setValue(user)
                         }

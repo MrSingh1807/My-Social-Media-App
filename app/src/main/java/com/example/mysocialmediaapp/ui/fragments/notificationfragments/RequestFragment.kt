@@ -1,4 +1,4 @@
-package com.example.mysocialmediaapp.ui.fragments
+package com.example.mysocialmediaapp.ui.fragments.notificationfragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

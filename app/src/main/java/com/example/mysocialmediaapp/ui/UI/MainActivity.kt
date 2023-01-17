@@ -1,4 +1,4 @@
-package com.example.mysocialmediaapp.ui
+package com.example.mysocialmediaapp.ui.UI
 
 import android.os.Bundle
 import android.view.Menu
