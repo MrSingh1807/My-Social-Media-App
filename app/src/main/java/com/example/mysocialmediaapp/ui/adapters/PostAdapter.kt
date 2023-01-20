@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mysocialmediaapp.databinding.DashboardRvSampleBinding
-import com.example.mysocialmediaapp.ui.models.DashBoardModel
+import com.example.mysocialmediaapp.ui.models.Post
 
-class DashBoardAdapter(
+class PostAdapter(
     val context: Context,
-    private var dashBoardModel: ArrayList<DashBoardModel> = ArrayList()
-) : RecyclerView.Adapter<DashBoardAdapter.DashBoardHolder>() {
+    private var dashBoardModel: ArrayList<Post> = ArrayList()
+) : RecyclerView.Adapter<PostAdapter.DashBoardHolder>() {
 
     class DashBoardHolder(val binding: DashboardRvSampleBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -22,14 +22,14 @@ class DashBoardAdapter(
     }
 
     override fun onBindViewHolder(holder: DashBoardHolder, position: Int) {
-        holder.binding.profileImgVw.setImageResource(dashBoardModel[position].profile)
-        holder.binding.userNameTV.text = dashBoardModel[position].name
-        holder.binding.aboutTV.text = dashBoardModel[position].about
-
-        holder.binding.storyImgVw.setImageResource(dashBoardModel[position].postImage)
-        holder.binding.likesTV.text = dashBoardModel[position].likes
-        holder.binding.commentTV.text = dashBoardModel[position].comments
-        holder.binding.shareTV.text = dashBoardModel[position].share
+//        holder.binding.profileImgVw.setImageResource(dashBoardModel[position].profile)
+//        holder.binding.userNameTV.text = dashBoardModel[position].name
+//        holder.binding.aboutTV.text = dashBoardModel[position].about
+//
+//        holder.binding.storyImgVw.setImageResource(dashBoardModel[position].postImage)
+//        holder.binding.likesTV.text = dashBoardModel[position].likes
+//        holder.binding.commentTV.text = dashBoardModel[position].comments
+//        holder.binding.shareTV.text = dashBoardModel[position].share
 
     }
 

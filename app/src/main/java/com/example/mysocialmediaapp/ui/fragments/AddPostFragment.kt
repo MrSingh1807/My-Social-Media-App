@@ -2,39 +2,46 @@ package com.example.mysocialmediaapp.ui.fragments
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentAddPostBinding
+import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import java.io.ByteArrayOutputStream
+import java.util.*
 
 class AddPostFragment : Fragment() {
 
     private var _binding: FragmentAddPostBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var uri: Uri
+//    lateinit var dialog: ProgressBar
+
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseDatabase: FirebaseDatabase
+    private lateinit var firebaseStorage: FirebaseStorage
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +49,10 @@ class AddPostFragment : Fragment() {
 
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
+        firebaseStorage = FirebaseStorage.getInstance()
+//        dialog = ProgressBar(context)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,9 +62,9 @@ class AddPostFragment : Fragment() {
 
         // Fetch Data from Firebase DataBase
         firebaseDatabase.reference.child("Users")
-            .child(firebaseAuth.uid!!).addListenerForSingleValueEvent(object :ValueEventListener{
+            .child(firebaseAuth.uid!!).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()){
+                    if (snapshot.exists()) {
                         val user = snapshot.getValue(User::class.java)
                         Picasso.get().load(user?.profilePhoto)
                             .placeholder(R.drawable.cute_dog)
@@ -77,8 +87,10 @@ class AddPostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         //Edit Texts
-        binding.postDescriptionET.doOnTextChanged{ text, start, before, count ->
+        binding.postDescriptionET.doOnTextChanged { text, start, before, count ->
             if (text!!.isNotEmpty()) {
                 showPostBTN(R.drawable.follow_btn_bg, R.color.white, true)
             } else {
@@ -100,7 +112,7 @@ class AddPostFragment : Fragment() {
                     intentGallery.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     pickCoverImageFromGallery.launch(intentGallery)
                 }
-                .setNeutralButton("Cancel"){dialogInterface, i ->
+                .setNeutralButton("Cancel") { dialogInterface, i ->
                     dialogInterface.dismiss()
                 }
             dialog.show()
@@ -108,7 +120,24 @@ class AddPostFragment : Fragment() {
 
         // Buttons
         binding.postBTN.setOnClickListener {
-            Toast.makeText(context, "Clicked" , Toast.LENGTH_SHORT).show()
+            val refrence = firebaseStorage.reference.child("posts")
+                .child(firebaseAuth.uid!!)
+                .child(Date().time.toString())
+            refrence.putFile(uri).addOnSuccessListener {
+                refrence.downloadUrl.addOnSuccessListener {
+                    val post = Post(
+                        postImage = uri.toString(),
+                        postedBy = firebaseAuth.uid!!,
+                        postDescription = binding.postDescriptionET.text.toString(),
+                        postedAt = Date().time,
+                    )
+                    firebaseDatabase.reference.child("posts")
+                        .push()
+                        .setValue(post).addOnSuccessListener {
+                            Toast.makeText(context, "Posted Successful", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
         }
 
     }
@@ -117,13 +146,13 @@ class AddPostFragment : Fragment() {
     private val pickCoverImageFromGallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val galleryUri = result.data?.data!!
+                uri = result.data?.data!!
                 binding.previewUploadedPostImageIV.visibility = View.VISIBLE
-                binding.previewUploadedPostImageIV.setImageURI(galleryUri)
+                binding.previewUploadedPostImageIV.setImageURI(uri)
 
                 showPostBTN(R.drawable.follow_btn_bg, R.color.white, true)
             }
-            }
+        }
     private val pickCoverImageFromCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -136,7 +165,7 @@ class AddPostFragment : Fragment() {
             }
         }
 
-    private fun showPostBTN(drawable: Int, color: Int, isEnabled: Boolean){
+    private fun showPostBTN(drawable: Int, color: Int, isEnabled: Boolean) {
         binding.postBTN.setBackgroundDrawable(context?.let {
             ContextCompat.getDrawable(
                 it, drawable

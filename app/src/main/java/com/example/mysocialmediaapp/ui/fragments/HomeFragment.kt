@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentHomeBinding
-import com.example.mysocialmediaapp.ui.adapters.DashBoardAdapter
+import com.example.mysocialmediaapp.ui.adapters.PostAdapter
 import com.example.mysocialmediaapp.ui.adapters.StoryAdapter
-import com.example.mysocialmediaapp.ui.models.DashBoardModel
+import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.StoryModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +21,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var storyList: ArrayList<StoryModel> = ArrayList()
-    private var dashBoardList: ArrayList<DashBoardModel> = ArrayList()
+    private var dashBoardList: ArrayList<Post> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,47 +80,10 @@ class HomeFragment : Fragment() {
         binding.storyRecyclerView.adapter = mAdapter
     }
     private fun setUpDashBoardRecyclerView() {
-        dashBoardList.add(
-            DashBoardModel(
-                R.drawable.cute_dog,
-                R.drawable.kid,
-                10,
-                "Mr Singh",
-                "Cool Personality",
-                "200",
-                "100",
-                "20"
-            )
-        )
-        dashBoardList.add(
-            DashBoardModel(
-                R.drawable.cute_dog,
-                R.drawable.kid,
-                10,
-                "Mr Singh",
-                "Cool Personality",
-                "200",
-                "100",
-                "20"
-            )
-        )
-        dashBoardList.add(
-            DashBoardModel(
-                R.drawable.cute_dog,
-                R.drawable.kid,
-                10,
-                "Mr Singh",
-                "Cool Personality",
-                "200",
-                "100",
-                "20"
-            )
-        )
-
 
         binding.dashBoardRV.layoutManager = LinearLayoutManager(requireContext())
         binding.storyRecyclerView.isNestedScrollingEnabled = false
-        binding.dashBoardRV.adapter = DashBoardAdapter(requireContext(), dashBoardList)
+        binding.dashBoardRV.adapter = PostAdapter(requireContext(), dashBoardList)
     }
 
     override fun onDestroyView() {
