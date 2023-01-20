@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.ProfileFragment">
 
-
     <ImageView
         android:id="@+id/coverProfileIV"
         android:layout_width="wrap_content"
@@ -29,6 +28,19 @@
         app:layout_constraintStart_toStartOf="@id/coverProfileIV"
         app:layout_constraintTop_toTopOf="@id/coverProfileIV"
         app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/log_out"
+        app:popupTheme="@style/Theme.AppCompat.Light" />
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImgVw"

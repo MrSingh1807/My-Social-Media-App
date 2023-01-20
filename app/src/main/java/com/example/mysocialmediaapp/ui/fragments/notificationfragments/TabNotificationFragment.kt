@@ -27,8 +27,16 @@ class TabNotificationFragment : Fragment() {
         // Inflate the layout for this fragment
           _binding = FragmentTabNotificationBinding.inflate(inflater, container,false)
 
-          setUpRecyclerView()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+    override fun onResume() {
+        super.onResume()
+        setUpRecyclerView()
     }
 
     private fun setUpRecyclerView() {

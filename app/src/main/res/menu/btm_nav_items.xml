@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_notification"
         android:title="@string/notification" />
     <item
-        android:id="@+id/addFragment"
+        android:id="@+id/addPostFragment"
         android:icon="@drawable/ic_add"
         android:title="@string/add" />
     <item

@@ -6,4 +6,5 @@
         android:id="@+id/setting"
         android:icon="@drawable/ic_setting"
         app:showAsAction="always"/>
+
 </menu>

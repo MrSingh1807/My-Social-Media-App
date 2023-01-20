@@ -6,15 +6,15 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentProfileBinding
+import com.example.mysocialmediaapp.ui.UI.LogInActivity
 import com.example.mysocialmediaapp.ui.adapters.FollowerAdapter
 import com.example.mysocialmediaapp.ui.models.FollowModel
 import com.example.mysocialmediaapp.ui.models.User
@@ -66,6 +66,9 @@ class ProfileFragment : Fragment() {
                     intentGallery.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     pickCoverImageFromGallery.launch(intentGallery)
                 }
+                .setNeutralButton("Cancel"){dialogInterface, i ->
+                    dialogInterface.dismiss()
+                }
             dialog.show()
         }
         binding.changeProfilePicView.setOnClickListener {
@@ -81,21 +84,27 @@ class ProfileFragment : Fragment() {
                     intentGallery.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     pickProfileImageFromGallery.launch(intentGallery)
                 }
+                .setNeutralButton("Cancel"){dialogInterface, i ->
+                    dialogInterface.dismiss()
+                }
             alert.show()
         }
 
+
+        //Fetch User Data from database
         firebaseDatabase.reference.child("Users").child(firebaseAuth.uid!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
-                        val user = snapshot.getValue(User::class.java)
-                        Picasso.get().load(user?.coverPhoto).placeholder(R.drawable.ic_image_search)
+                        val user = snapshot.getValue(User::class.java)!!
+                        Picasso.get().load(user.coverPhoto).placeholder(R.drawable.ic_image_search)
                             .into(binding.coverProfileIV)
-                        Picasso.get().load(user?.profilePhoto).placeholder(R.drawable.ic_image_search)
+                        Picasso.get().load(user.profilePhoto).placeholder(R.drawable.ic_image_search)
                             .into(binding.profileImgVw)
 
-                        binding.userNameTV.text = user!!.name
+                        binding.userNameTV.text = user.name
                         binding.professionTV.text = user.profession
+                        binding.followerCountTV.text = user.followerCount.toString()
                     }
                 }
 
@@ -109,6 +118,26 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val menuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.log_out, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return if ( menuItem.itemId == R.id.logOut ) {
+                    firebaseAuth.signOut()
+                    startActivity(Intent(context, LogInActivity::class.java))
+                    true
+                } else {
+                    false
+                }
+            }
+        })
+    }
 
     private val pickCoverImageFromGallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -200,11 +229,15 @@ class ProfileFragment : Fragment() {
         binding.friendsProfileRV.isNestedScrollingEnabled = false
         binding.friendsProfileRV.adapter = friendAdapter
 
+        //get Data from Firebase
         firebaseDatabase.reference
             .child("Users")
+            .child(firebaseAuth.uid!!)
             .child("follower")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    myFriendsList.clear()
+
                     for ( DataSnapShot in snapshot.children){
                         val follow = DataSnapShot.getValue(FollowModel::class.java)!!
                         myFriendsList.add(follow)
@@ -215,7 +248,6 @@ class ProfileFragment : Fragment() {
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
-
             })
     }
 
