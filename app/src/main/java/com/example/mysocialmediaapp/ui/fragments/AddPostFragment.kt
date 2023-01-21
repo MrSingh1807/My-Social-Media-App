@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.fragment.findNavController
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentAddPostBinding
 import com.example.mysocialmediaapp.ui.models.Post
@@ -37,7 +38,6 @@ class AddPostFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var uri: Uri
-//    lateinit var dialog: ProgressBar
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseDatabase: FirebaseDatabase
@@ -50,7 +50,6 @@ class AddPostFragment : Fragment() {
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
         firebaseStorage = FirebaseStorage.getInstance()
-//        dialog = ProgressBar(context)
     }
 
     override fun onCreateView(
@@ -65,20 +64,19 @@ class AddPostFragment : Fragment() {
             .child(firebaseAuth.uid!!).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
-                        val user = snapshot.getValue(User::class.java)
-                        Picasso.get().load(user?.profilePhoto)
+                        val user = snapshot.getValue(User::class.java)!!
+                        Picasso.get().load(user.profilePhoto)
                             .placeholder(R.drawable.cute_dog)
                             .into(binding.profileImgVw)
 
-                        binding.userNameTV.text = user?.name
-                        binding.userProfessionTV.text = user?.profession
+                        binding.userNameTV.text = user.name
+                        binding.userProfessionTV.text = user.profession
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
-
             })
 
         return binding.root
@@ -86,8 +84,6 @@ class AddPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         //Edit Texts
         binding.postDescriptionET.doOnTextChanged { text, start, before, count ->
@@ -126,20 +122,22 @@ class AddPostFragment : Fragment() {
             refrence.putFile(uri).addOnSuccessListener {
                 refrence.downloadUrl.addOnSuccessListener {
                     val post = Post(
-                        postImage = uri.toString(),
+                        postImage = it.toString(),
                         postedBy = firebaseAuth.uid!!,
                         postDescription = binding.postDescriptionET.text.toString(),
                         postedAt = Date().time,
                     )
-                    firebaseDatabase.reference.child("posts")
-                        .push()
+                    firebaseDatabase.reference.child("posts").child(firebaseAuth.uid!!)
                         .setValue(post).addOnSuccessListener {
                             Toast.makeText(context, "Posted Successful", Toast.LENGTH_SHORT).show()
+
+                            val action =
+                                AddPostFragmentDirections.actionAddPostFragmentToHomeFragment()
+                            findNavController().navigate(action)
                         }
                 }
             }
         }
-
     }
 
 

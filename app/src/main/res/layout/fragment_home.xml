@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/storyImgVw"
+                        android:id="@+id/postImgVw"
                         android:layout_width="160dp"
                         android:layout_height="100dp"
                         android:scaleType="centerCrop"
@@ -115,11 +115,11 @@
                         android:backgroundTint="#38957D"
                         android:src="@drawable/ic_plus"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/storyImgVw"
-                        app:layout_constraintEnd_toEndOf="@+id/storyImgVw"
+                        app:layout_constraintBottom_toBottomOf="@+id/postImgVw"
+                        app:layout_constraintEnd_toEndOf="@+id/postImgVw"
                         app:layout_constraintHorizontal_bias="0.471"
-                        app:layout_constraintStart_toStartOf="@+id/storyImgVw"
-                        app:layout_constraintTop_toTopOf="@+id/storyImgVw"
+                        app:layout_constraintStart_toStartOf="@+id/postImgVw"
+                        app:layout_constraintTop_toTopOf="@+id/postImgVw"
                         app:layout_constraintVertical_bias="0.262" />
 
                     <TextView

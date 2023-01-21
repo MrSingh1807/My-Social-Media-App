@@ -12,6 +12,11 @@ import com.example.mysocialmediaapp.ui.adapters.PostAdapter
 import com.example.mysocialmediaapp.ui.adapters.StoryAdapter
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.StoryModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,8 +26,17 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var storyList: ArrayList<StoryModel> = ArrayList()
-    private var dashBoardList: ArrayList<Post> = ArrayList()
+    private var postList: ArrayList<Post> = ArrayList()
 
+    private lateinit var firebaseDatabase: FirebaseDatabase
+    private lateinit var firebaseAuth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -83,7 +97,25 @@ class HomeFragment : Fragment() {
 
         binding.dashBoardRV.layoutManager = LinearLayoutManager(requireContext())
         binding.storyRecyclerView.isNestedScrollingEnabled = false
-        binding.dashBoardRV.adapter = PostAdapter(requireContext(), dashBoardList)
+        val postAdapter = PostAdapter(requireContext(), postList)
+        binding.dashBoardRV.adapter = postAdapter
+
+        firebaseDatabase.reference.child("posts")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    postList.clear()
+                   for (dataSnapshot in snapshot.children){
+                       val post = dataSnapshot.getValue(Post::class.java)!!
+                       post.postID = dataSnapshot.key
+                       postList.add(post)
+                   }
+                    postAdapter.notifyDataSetChanged()
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
     }
 
     override fun onDestroyView() {

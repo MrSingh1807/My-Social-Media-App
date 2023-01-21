@@ -66,7 +66,7 @@ class ProfileFragment : Fragment() {
                     intentGallery.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     pickCoverImageFromGallery.launch(intentGallery)
                 }
-                .setNeutralButton("Cancel"){dialogInterface, i ->
+                .setNeutralButton("Cancel") { dialogInterface, i ->
                     dialogInterface.dismiss()
                 }
             dialog.show()
@@ -84,7 +84,7 @@ class ProfileFragment : Fragment() {
                     intentGallery.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     pickProfileImageFromGallery.launch(intentGallery)
                 }
-                .setNeutralButton("Cancel"){dialogInterface, i ->
+                .setNeutralButton("Cancel") { dialogInterface, i ->
                     dialogInterface.dismiss()
                 }
             alert.show()
@@ -99,7 +99,8 @@ class ProfileFragment : Fragment() {
                         val user = snapshot.getValue(User::class.java)!!
                         Picasso.get().load(user.coverPhoto).placeholder(R.drawable.ic_image_search)
                             .into(binding.coverProfileIV)
-                        Picasso.get().load(user.profilePhoto).placeholder(R.drawable.ic_image_search)
+                        Picasso.get().load(user.profilePhoto)
+                            .placeholder(R.drawable.ic_image_search)
                             .into(binding.profileImgVw)
 
                         binding.userNameTV.text = user.name
@@ -128,7 +129,7 @@ class ProfileFragment : Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return if ( menuItem.itemId == R.id.logOut ) {
+                return if (menuItem.itemId == R.id.logOut) {
                     firebaseAuth.signOut()
                     startActivity(Intent(context, LogInActivity::class.java))
                     true
@@ -141,22 +142,22 @@ class ProfileFragment : Fragment() {
 
     private val pickCoverImageFromGallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val galleryUri = result.data?.data!!
-            binding.coverProfileIV.setImageURI(galleryUri)
+            if (result.resultCode == Activity.RESULT_OK) {
+                val galleryUri = result.data?.data!!
+                binding.coverProfileIV.setImageURI(galleryUri)
 
-            val uid = FirebaseAuth.getInstance().uid!!
-            val refrence = firebaseStorage.reference.child("cover_photo").child(uid)
-            refrence.putFile(galleryUri).addOnSuccessListener {
-                Toast.makeText(requireContext(), "Cover Pic Saved", Toast.LENGTH_SHORT).show()
+                val uid = FirebaseAuth.getInstance().uid!!
+                val refrence = firebaseStorage.reference.child("cover_photo").child(uid)
+                refrence.putFile(galleryUri).addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Cover Pic Saved", Toast.LENGTH_SHORT).show()
 
-                refrence.downloadUrl.addOnSuccessListener {
-                    firebaseDatabase.reference.child("Users").child(uid).child("coverPhoto")
-                        .setValue(it.toString())
+                    refrence.downloadUrl.addOnSuccessListener {
+                        firebaseDatabase.reference.child("Users").child(uid).child("coverPhoto")
+                            .setValue(it.toString())
+                    }
                 }
             }
         }
-    }
     private val pickCoverImageFromCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -234,11 +235,11 @@ class ProfileFragment : Fragment() {
             .child("Users")
             .child(firebaseAuth.uid!!)
             .child("follower")
-            .addValueEventListener(object : ValueEventListener{
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     myFriendsList.clear()
 
-                    for ( DataSnapShot in snapshot.children){
+                    for (DataSnapShot in snapshot.children) {
                         val follow = DataSnapShot.getValue(FollowModel::class.java)!!
                         myFriendsList.add(follow)
                     }
