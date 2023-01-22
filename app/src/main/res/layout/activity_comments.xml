@@ -179,25 +179,25 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/follow_active_btn"
-        app:layout_constraintBottom_toBottomOf="@+id/postCommentTV"
+        app:layout_constraintBottom_toBottomOf="@+id/postCommentET"
         app:layout_constraintEnd_toEndOf="@+id/postCommentIcon"
-        app:layout_constraintStart_toStartOf="@+id/postCommentTV"
-        app:layout_constraintTop_toTopOf="@+id/postCommentTV" />
+        app:layout_constraintStart_toStartOf="@+id/postCommentET"
+        app:layout_constraintTop_toTopOf="@+id/postCommentET" />
 
     <ImageView
         android:id="@+id/postCommentIcon"
         android:layout_width="50dp"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/postCommentTV"
+        app:layout_constraintBottom_toBottomOf="@+id/postCommentET"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/postCommentTV"
-        app:layout_constraintTop_toTopOf="@+id/postCommentTV"
+        app:layout_constraintStart_toEndOf="@+id/postCommentET"
+        app:layout_constraintTop_toTopOf="@+id/postCommentET"
         app:srcCompat="@drawable/ic_baseline_send" />
 
     <EditText
-        android:id="@+id/postCommentTV"
+        android:id="@+id/postCommentET"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -206,6 +206,7 @@
         android:ems="10"
         android:hint="Write a Comment..."
         android:inputType="textPersonName"
+        android:maxLines="2"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/postCommentIcon"

@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso
 class PostAdapter(
     val context: Context,
     private var postModel: ArrayList<Post> = ArrayList()
-
 ) : RecyclerView.Adapter<PostAdapter.DashBoardHolder>() {
 
     class DashBoardHolder(val binding: DashboardRvSampleBinding) :
@@ -40,6 +39,7 @@ class PostAdapter(
             .into(holder.binding.postImgVw)
 
         holder.binding.likesTV.text = post.postLikes.toString()
+        holder.binding.commentTV.text = post.commentCount.toString()
         if (post.postDescription.equals("")) {
             holder.binding.postDescriptionTV.visibility = View.GONE
         } else {
@@ -98,6 +98,9 @@ class PostAdapter(
 
         holder.binding.commentImgVw.setOnClickListener{
             val intent = Intent(context, CommentsActivity::class.java)
+            intent.putExtra("postID", post.postID)
+            intent.putExtra("postedBy", post.postedBy)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }
 

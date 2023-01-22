@@ -7,5 +7,6 @@ data class Post(
     val postedBy: String? = "",
     val postDescription: String? =  "",
     val postedAt: Long? = 0,
-    val postLikes :Int? = 0
+    val postLikes :Int? = 0,
+    val commentCount: Int? = 0
 )
