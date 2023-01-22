@@ -2,6 +2,7 @@ package com.example.mysocialmediaapp.ui.UI
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
@@ -32,6 +33,10 @@ class CommentsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCommentsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+        this@CommentsActivity.title = "Comments"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
@@ -112,6 +117,11 @@ class CommentsActivity : AppCompatActivity() {
         }
 
         setUpCommentsRecyclerView()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setUpCommentsRecyclerView() {

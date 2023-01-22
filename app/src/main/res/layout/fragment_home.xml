@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/postImgVw"
+                        android:id="@+id/postBackgroundIV"
                         android:layout_width="160dp"
                         android:layout_height="100dp"
                         android:scaleType="centerCrop"
@@ -108,22 +108,22 @@
                         app:layout_constraintVertical_bias="0.5" />
 
                     <ImageView
-                        android:id="@+id/imgVwAdd"
+                        android:id="@+id/addStoryIV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/img_corner"
                         android:backgroundTint="#38957D"
                         android:src="@drawable/ic_plus"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/postImgVw"
-                        app:layout_constraintEnd_toEndOf="@+id/postImgVw"
+                        app:layout_constraintBottom_toBottomOf="@+id/postBackgroundIV"
+                        app:layout_constraintEnd_toEndOf="@+id/postBackgroundIV"
                         app:layout_constraintHorizontal_bias="0.471"
-                        app:layout_constraintStart_toStartOf="@+id/postImgVw"
-                        app:layout_constraintTop_toTopOf="@+id/postImgVw"
+                        app:layout_constraintStart_toStartOf="@+id/postBackgroundIV"
+                        app:layout_constraintTop_toTopOf="@+id/postBackgroundIV"
                         app:layout_constraintVertical_bias="0.262" />
 
                     <TextView
-                        android:id="@+id/storyName"
+                        android:id="@+id/storyNameTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -131,9 +131,9 @@
                         android:text="Create a Story"
                         android:textColor="@color/white"
                         android:textSize="18sp"
-                        app:layout_constraintEnd_toEndOf="@+id/imgVwAdd"
-                        app:layout_constraintStart_toStartOf="@+id/imgVwAdd"
-                        app:layout_constraintTop_toBottomOf="@+id/imgVwAdd" />
+                        app:layout_constraintEnd_toEndOf="@+id/addStoryIV"
+                        app:layout_constraintStart_toStartOf="@+id/addStoryIV"
+                        app:layout_constraintTop_toBottomOf="@+id/addStoryIV" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

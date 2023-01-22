@@ -80,10 +80,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
-    // Circular ImageView
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-
-    //FireBase
+    //FireBase 
     //    firebase BoM
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     //Analytics
@@ -95,6 +92,15 @@ dependencies {
     //Storage
     implementation 'com.google.firebase:firebase-storage-ktx'
 
+    /********* Third party Libraries ********/
+    // Circular ImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.8'
+    //TimeAgo Library
+    implementation 'com.github.marlonlom:timeago:4.0.3'
+    // CircularStatusView
+    implementation 'com.github.3llomi:CircularStatusView:V1.0.3'
+    //StoryView
+    implementation 'com.github.OMARIHAMZA:StoryView:1.0.2-alpha'
 }
