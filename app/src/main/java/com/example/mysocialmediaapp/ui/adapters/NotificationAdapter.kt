@@ -1,12 +1,15 @@
 package com.example.mysocialmediaapp.ui.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.TabNotificationRecyclerViewBinding
+import com.example.mysocialmediaapp.ui.UI.CommentsActivity
 import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.User
 import com.google.firebase.database.DataSnapshot
@@ -56,6 +59,28 @@ class NotificationAdapter(
                     TODO("Not yet implemented")
                 }
             })
+
+        holder.binding.openNotificationVG.setOnClickListener {
+            if (!notification.type.equals("follow")) {
+
+                FirebaseDatabase.getInstance().reference.child("Notification")
+                    .child(notification.postID!!)
+                    .child(notification.notificationId!!)
+                    .child("checkOpen")
+                    .setValue("true")
+
+                holder.binding.openNotificationVG.setBackgroundColor(ContextCompat.getColor(context,R.color.white))
+
+                val intent = Intent(context, CommentsActivity::class.java)
+                intent.putExtra("postID", notification.postID)
+                intent.putExtra("postedBy", notification.postedBy)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
+            }
+        }
+        if (notification.checkOpen == true){
+            holder.binding.openNotificationVG.setBackgroundColor(ContextCompat.getColor(context,R.color.white))
+        }
     }
 
     override fun getItemCount(): Int {
