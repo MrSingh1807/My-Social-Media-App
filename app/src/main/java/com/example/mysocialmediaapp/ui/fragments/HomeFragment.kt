@@ -143,7 +143,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpDashBoardRecyclerView() {
-
+        showShimmerEffect()
         binding.dashBoardRV.layoutManager = LinearLayoutManager(requireContext())
         binding.storyRecyclerView.isNestedScrollingEnabled = false
         val postAdapter = PostAdapter(requireContext(), postList)
@@ -158,16 +158,26 @@ class HomeFragment : Fragment() {
                         post.postID = dataSnapshot.key
                         postList.add(post)
                     }
+                    hideShimmerEffect()
                     postAdapter.notifyDataSetChanged()
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    showShimmerEffect()
                 }
-
             })
+
+    }
+    private fun showShimmerEffect() {
+        binding.shimmerFrameLayout.startShimmer()
+        binding.shimmerFrameLayout.visibility = View.VISIBLE
+        binding.dashBoardRV.visibility = View.GONE
     }
 
+    private fun hideShimmerEffect() {
+        binding.shimmerFrameLayout.stopShimmer()
+        binding.shimmerFrameLayout.visibility = View.GONE
+        binding.dashBoardRV.visibility = View.VISIBLE
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

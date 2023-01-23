@@ -1,145 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <View
         android:id="@+id/profileImgVw"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
+        android:background="@color/placeHolderColor"
         android:padding="3dp"
-        android:src="@drawable/cute_dog"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/changeProfilePicView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/image_circle_background"
-        app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
-        app:layout_constraintEnd_toEndOf="@+id/profileImgVw"
-        app:layout_constraintStart_toStartOf="@+id/profileImgVw"
-        app:layout_constraintTop_toTopOf="@+id/profileImgVw" />
-
-    <TextView
         android:id="@+id/userNameTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
         android:layout_marginStart="8dp"
-        android:hint="Mr Singh"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:background="@color/placeHolderColor"
         app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
         app:layout_constraintStart_toEndOf="@+id/profileImgVw"
         app:layout_constraintTop_toTopOf="@+id/profileImgVw"
         app:layout_constraintVertical_bias="0.19999999" />
 
-    <TextView
+    <View
         android:id="@+id/aboutTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
-        android:text="About"
+        android:background="@color/placeHolderColor"
         app:layout_constraintEnd_toEndOf="@+id/userNameTV"
         app:layout_constraintStart_toStartOf="@+id/userNameTV"
         app:layout_constraintTop_toBottomOf="@+id/userNameTV" />
 
-    <ImageView
+    <View
         android:id="@+id/imgVwThreeDot"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_marginEnd="8dp"
+        android:background="@color/placeHolderColor"
         app:layout_constraintBottom_toBottomOf="@+id/profileImgVw"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/profileImgVw"
         app:srcCompat="@drawable/ic_more" />
 
-    <androidx.cardview.widget.CardView
+    <View
         android:id="@+id/cardView"
         android:layout_width="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_height="200dp"
         android:layout_marginTop="5dp"
-
-        app:cardCornerRadius="10dp"
-        app:cardElevation="3dp"
-        app:cardUseCompatPadding="true"
+        android:background="@drawable/img_corner"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileImgVw">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </View>
 
-            <ImageView
-                android:id="@+id/postImgVw"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/kid"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="16dp"
-                android:scaleType="fitStart"
-                android:src="@drawable/ic_bookmark"
-                app:layout_constraintEnd_toEndOf="@+id/postImgVw"
-                app:layout_constraintTop_toTopOf="@+id/postImgVw" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <TextView
+    <View
         android:id="@+id/postDescriptionTV"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="TextView"
+        android:background="@color/placeHolderColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-    <ImageView
+    <View
         android:id="@+id/likeImgVw"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@color/placeHolderColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postDescriptionTV"
         app:srcCompat="@drawable/ic_heart" />
 
-    <TextView
+    <View
         android:id="@+id/likesTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@color/placeHolderColor"
         android:layout_marginStart="8dp"
-        android:text="100"
         app:layout_constraintBottom_toBottomOf="@+id/likeImgVw"
         app:layout_constraintStart_toEndOf="@+id/likeImgVw"
         app:layout_constraintTop_toTopOf="@+id/likeImgVw" />
 
-    <ImageView
+    <View
         android:id="@+id/commentImgVw"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:background="@color/placeHolderColor"
         app:layout_constraintBottom_toBottomOf="@+id/likesTV"
         app:layout_constraintEnd_toStartOf="@+id/commentTV"
         app:layout_constraintHorizontal_bias="0.5"
@@ -148,36 +113,38 @@
         app:layout_constraintTop_toTopOf="@+id/likesTV"
         app:srcCompat="@drawable/ic_chat" />
 
-    <TextView
+    <View
         android:id="@+id/commentTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="8dp"
-        android:text="500"
+        android:background="@color/placeHolderColor"
         app:layout_constraintBottom_toBottomOf="@+id/commentImgVw"
         app:layout_constraintEnd_toStartOf="@+id/shareImgVw"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/commentImgVw"
         app:layout_constraintTop_toTopOf="@+id/commentImgVw" />
 
-    <ImageView
+    <View
         android:id="@+id/shareImgVw"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="8dp"
+        android:background="@color/placeHolderColor"
         app:layout_constraintBottom_toBottomOf="@+id/shareTV"
         app:layout_constraintEnd_toStartOf="@+id/shareTV"
         app:layout_constraintTop_toTopOf="@+id/shareTV"
         app:layout_constraintVertical_bias="0.363"
         app:srcCompat="@drawable/ic_share" />
 
-    <TextView
+    <View
         android:id="@+id/shareTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
-        android:text="20"
+        android:background="@color/placeHolderColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postDescriptionTV" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
