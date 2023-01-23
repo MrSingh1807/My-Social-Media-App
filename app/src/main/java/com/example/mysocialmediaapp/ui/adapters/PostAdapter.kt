@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.DashboardRvSampleBinding
 import com.example.mysocialmediaapp.ui.UI.CommentsActivity
+import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.User
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
+import java.util.Date
 
 class PostAdapter(
     val context: Context,
@@ -30,6 +32,10 @@ class PostAdapter(
         val itemBinding =
             DashboardRvSampleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DashBoardHolder(itemBinding)
+    }
+
+    override fun getItemCount(): Int {
+        return postModel.size
     }
 
     override fun onBindViewHolder(holder: DashBoardHolder, position: Int) {
@@ -69,9 +75,10 @@ class PostAdapter(
 
         val firebasePostInstance = FirebaseDatabase.getInstance().reference.child("posts")
             .child(post.postID!!)
+        val currentUserUID = FirebaseAuth.getInstance().uid!!
 
         firebasePostInstance.child("likes")
-            .child(FirebaseAuth.getInstance().uid!!)
+            .child(currentUserUID)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
@@ -79,11 +86,23 @@ class PostAdapter(
                     } else {
                         holder.binding.likeImgVw.setOnClickListener {
                             firebasePostInstance.child("likes")
-                                .child(FirebaseAuth.getInstance().uid!!)
+                                .child(currentUserUID)
                                 .setValue(true).addOnSuccessListener {
                                     firebasePostInstance.child("postLikes")
                                         .setValue(post.postLikes?.plus(1)).addOnSuccessListener {
                                             holder.binding.likeImgVw.setImageResource(R.drawable.ic_pink_heart)
+                                            val notification = NotificationModel(
+                                                notificationBy = currentUserUID,
+                                                notificationAt = Date().time,
+                                                postID = post.postID,
+                                                postedBy = post.postedBy,
+                                                type = "like" )
+
+                                            FirebaseDatabase.getInstance().reference.child("Notification")
+                                                .child(post.postID!!).push()
+                                                .setValue(notification)
+
+
                                         }
                                 }
                         }
@@ -96,7 +115,7 @@ class PostAdapter(
 
             })
 
-        holder.binding.commentImgVw.setOnClickListener{
+        holder.binding.commentImgVw.setOnClickListener {
             val intent = Intent(context, CommentsActivity::class.java)
             intent.putExtra("postID", post.postID)
             intent.putExtra("postedBy", post.postedBy)
@@ -104,10 +123,6 @@ class PostAdapter(
             context.startActivity(intent)
         }
 
-    }
-
-    override fun getItemCount(): Int {
-        return postModel.size
     }
 
 }

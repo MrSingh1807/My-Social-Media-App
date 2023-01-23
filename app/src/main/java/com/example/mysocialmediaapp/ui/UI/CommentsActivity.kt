@@ -9,6 +9,7 @@ import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.ActivityCommentsBinding
 import com.example.mysocialmediaapp.ui.adapters.CommentsAdapter
 import com.example.mysocialmediaapp.ui.models.Comment
+import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.User
 import com.google.firebase.auth.FirebaseAuth
@@ -106,6 +107,18 @@ class CommentsActivity : AppCompatActivity() {
                                     .setValue(commentCount+1).addOnSuccessListener {
                                         binding.postCommentET.setText("")
                                         Toast.makeText(this@CommentsActivity, "Commented", Toast.LENGTH_SHORT).show()
+
+                                        val notification = NotificationModel(
+                                            notificationBy = firebaseAuth.uid,
+                                            notificationAt = Date().time,
+                                            postID = postID,
+                                            postedBy = postedBy,
+                                            type = "comment"
+                                        )
+
+                                        firebaseDatabase.reference.child("Notification")
+                                            .child(postedBy).push()
+                                            .setValue(notification)
                                     }
                             }
 

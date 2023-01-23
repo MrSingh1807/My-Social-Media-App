@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.SearchUserSampleBinding
 import com.example.mysocialmediaapp.ui.models.FollowModel
+import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -52,9 +53,10 @@ class SearchUserAdapter(
             .child("Users")
             .child(user[position].userID!!)
             .child("followers")
-            .child(FirebaseAuth.getInstance().uid!!).addListenerForSingleValueEvent(object :ValueEventListener{
+            .child(FirebaseAuth.getInstance().uid!!)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()){
+                    if (snapshot.exists()) {
                         holder.binding.followBTN.setBackgroundDrawable(
                             ContextCompat.getDrawable(
                                 context,
@@ -90,7 +92,11 @@ class SearchUserAdapter(
                                                 )
                                             )
                                             holder.binding.followBTN.text = "Following"
-                                            holder.binding.followBTN.setTextColor(context.resources.getColor(R.color.mediumGray))
+                                            holder.binding.followBTN.setTextColor(
+                                                context.resources.getColor(
+                                                    R.color.mediumGray
+                                                )
+                                            )
                                             holder.binding.followBTN.isEnabled = false
 
                                             Toast.makeText(
@@ -98,6 +104,16 @@ class SearchUserAdapter(
                                                 "You followed - ${user[position].name}",
                                                 Toast.LENGTH_SHORT
                                             ).show()
+
+                                            val notification = NotificationModel(
+                                                notificationBy = currentUserUID,
+                                                notificationAt = Date().time,
+                                                type = "follow"
+                                            )
+                                            FirebaseDatabase.getInstance().reference.child("Notification")
+                                                .child(user[position].userID!!).push()
+                                                .setValue(notification)
+
                                         }
                                 }
                         }
