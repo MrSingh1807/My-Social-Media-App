@@ -11,6 +11,7 @@ import com.example.mysocialmediaapp.databinding.SearchUserSampleBinding
 import com.example.mysocialmediaapp.ui.models.FollowModel
 import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.User
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,7 +23,8 @@ import java.util.Date
 
 class SearchUserAdapter(
     val context: Context,
-    private var user: ArrayList<User> = ArrayList()
+    private var user: ArrayList<User> = ArrayList(),
+    private val mainViewModel: MainViewModel
 ) : RecyclerView.Adapter<SearchUserAdapter.SearchUserViewHolder>() {
 
     class SearchUserViewHolder(val binding: SearchUserSampleBinding) :
@@ -49,11 +51,10 @@ class SearchUserAdapter(
                 .into(holder.binding.profileImgVw)
         }
 
-        FirebaseDatabase.getInstance().reference
-            .child("Users")
+        mainViewModel.userFirebaseDB
             .child(user[position].userID!!)
             .child("followers")
-            .child(FirebaseAuth.getInstance().uid!!)
+            .child(mainViewModel.uid!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
@@ -69,18 +70,16 @@ class SearchUserAdapter(
                     } else {
                         holder.binding.followBTN.setOnClickListener {
 
-                            val currentUserUID = FirebaseAuth.getInstance().uid!!
+                            val currentUserUID = mainViewModel.uid
                             val follow = FollowModel(currentUserUID, Date().time)
 
-                            FirebaseDatabase.getInstance().reference
-                                .child("Users")
+                            mainViewModel.userFirebaseDB
                                 .child(user[position].userID!!)
                                 .child("followers")
                                 .child(currentUserUID)
                                 .setValue(follow)
                                 .addOnSuccessListener {
-                                    FirebaseDatabase.getInstance().reference
-                                        .child("Users")
+                                    mainViewModel.userFirebaseDB
                                         .child(user[position].userID!!)
                                         .child("followerCount")
                                         .setValue(user[position].followerCount?.plus(1))
@@ -110,7 +109,7 @@ class SearchUserAdapter(
                                                 notificationAt = Date().time,
                                                 type = "follow"
                                             )
-                                            FirebaseDatabase.getInstance().reference.child("Notification")
+                                            mainViewModel.notificationFirebaseDB
                                                 .child(user[position].userID!!).push()
                                                 .setValue(notification)
 

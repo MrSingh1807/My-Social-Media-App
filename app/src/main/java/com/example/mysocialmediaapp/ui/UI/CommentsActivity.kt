@@ -26,10 +26,13 @@ class CommentsActivity : AppCompatActivity() {
     lateinit var postID: String
     lateinit var postedBy: String
 
-    private val commentsList : ArrayList<Comment> = ArrayList()
+    private val commentsList: ArrayList<Comment> = ArrayList()
+
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseDatabase: FirebaseDatabase
+
+    private val commentsAdapter by lazy { CommentsAdapter(commentsList) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCommentsBinding.inflate(layoutInflater)
@@ -38,6 +41,7 @@ class CommentsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         this@CommentsActivity.title = "Comments"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
@@ -85,28 +89,32 @@ class CommentsActivity : AppCompatActivity() {
             val comment = Comment(
                 binding.postCommentET.text.toString(),
                 Date().time,
-                FirebaseAuth.getInstance().uid )
+                FirebaseAuth.getInstance().uid
+            )
 
 
-            firebaseDatabase.reference.child("posts")
-                .child(postID)
+            firebaseDatabase.reference.child("posts").child(postID)
                 .child("comments")
                 .push()
                 .setValue(comment).addOnSuccessListener {
                     firebaseDatabase.reference.child("posts")
                         .child(postID)
-                        .child("commentCount").addListenerForSingleValueEvent(object : ValueEventListener {
+                        .child("commentCount")
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 var commentCount = 0
-                                if (snapshot.exists()){
+                                if (snapshot.exists()) {
                                     commentCount = snapshot.getValue(Int::class.java)!!
                                 }
-                                firebaseDatabase.reference.child("posts")
-                                    .child(postID)
+                                firebaseDatabase.reference.child("posts").child(postID)
                                     .child("commentCount")
-                                    .setValue(commentCount+1).addOnSuccessListener {
+                                    .setValue(commentCount + 1).addOnSuccessListener {
                                         binding.postCommentET.setText("")
-                                        Toast.makeText(this@CommentsActivity, "Commented", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            this@CommentsActivity,
+                                            "Commented",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
 
                                         val notification = NotificationModel(
                                             notificationBy = firebaseAuth.uid,
@@ -139,16 +147,15 @@ class CommentsActivity : AppCompatActivity() {
 
     private fun setUpCommentsRecyclerView() {
 
-        val commentsAdapter = CommentsAdapter(this,commentsList)
+
         binding.commentsRV.layoutManager = LinearLayoutManager(this)
         binding.commentsRV.adapter = commentsAdapter
 
-        firebaseDatabase.reference.child("posts")
-            .child(postID)
-            .child("comments").addValueEventListener(object : ValueEventListener{
+        firebaseDatabase.reference.child("posts").child(postID)
+            .child("comments").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     commentsList.clear()
-                    for (dataSnapShot in snapshot.children){
+                    for (dataSnapShot in snapshot.children) {
                         val comment = dataSnapShot.getValue(Comment::class.java)!!
                         commentsList.add(comment)
                     }

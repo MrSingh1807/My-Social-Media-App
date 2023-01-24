@@ -8,6 +8,7 @@ import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FriendsRvInProfileBinding
 import com.example.mysocialmediaapp.ui.models.FollowModel
 import com.example.mysocialmediaapp.ui.models.User
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -16,7 +17,8 @@ import com.squareup.picasso.Picasso
 
 class FollowerAdapter(
     val context: Context,
-    private var myFriendsModel: ArrayList<FollowModel> = ArrayList()
+    private var myFriendsModel: ArrayList<FollowModel> = ArrayList(),
+    private val mainViewModel: MainViewModel
 
 ) : RecyclerView.Adapter<FollowerAdapter.MyFriendProfileViewHolder>() {
 
@@ -34,8 +36,7 @@ class FollowerAdapter(
 //        holder.binding.friendsImageIV.setImageResource(myFriendsModel[position].profileImage)
 
         val friendsList = myFriendsModel[position]
-        FirebaseDatabase.getInstance().reference
-            .child("Users")
+        mainViewModel.userFirebaseDB
             .child(friendsList.followedBy).addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                    val user = snapshot.getValue(User::class.java)!!

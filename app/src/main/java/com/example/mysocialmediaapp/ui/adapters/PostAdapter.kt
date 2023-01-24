@@ -12,6 +12,7 @@ import com.example.mysocialmediaapp.ui.UI.CommentsActivity
 import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.User
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,7 +23,8 @@ import java.util.Date
 
 class PostAdapter(
     val context: Context,
-    private var postModel: ArrayList<Post> = ArrayList()
+    private var postModel: ArrayList<Post> = ArrayList(),
+    private val mainViewModel: MainViewModel
 ) : RecyclerView.Adapter<PostAdapter.DashBoardHolder>() {
 
     class DashBoardHolder(val binding: DashboardRvSampleBinding) :
@@ -54,8 +56,8 @@ class PostAdapter(
         }
 
 
-        FirebaseDatabase.getInstance().reference.child("Users")
-            .child(post.postedBy!!).addValueEventListener(object : ValueEventListener {
+        mainViewModel.userFirebaseDB.child(post.postedBy!!)
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val user = snapshot.getValue(User::class.java)!!
                     Picasso.get().load(user.profilePhoto)
@@ -73,9 +75,8 @@ class PostAdapter(
             })
 
 
-        val firebasePostInstance = FirebaseDatabase.getInstance().reference.child("posts")
-            .child(post.postID!!)
-        val currentUserUID = FirebaseAuth.getInstance().uid!!
+        val firebasePostInstance = mainViewModel.postFirebaseDB.child(post.postID!!)
+        val currentUserUID = mainViewModel.uid!!
 
         firebasePostInstance.child("likes")
             .child(currentUserUID)
@@ -96,13 +97,12 @@ class PostAdapter(
                                                 notificationAt = Date().time,
                                                 postID = post.postID,
                                                 postedBy = post.postedBy,
-                                                type = "like" )
+                                                type = "like"
+                                            )
 
-                                            FirebaseDatabase.getInstance().reference.child("Notification")
-                                                .child(post.postID!!).push()
+                                            mainViewModel.notificationFirebaseDB.child(post.postID!!)
+                                                .push()
                                                 .setValue(notification)
-
-
                                         }
                                 }
                         }

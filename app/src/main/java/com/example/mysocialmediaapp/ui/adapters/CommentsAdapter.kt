@@ -1,6 +1,5 @@
 package com.example.mysocialmediaapp.ui.adapters
 
-import android.content.Context
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.CommentsSampleBinding
 import com.example.mysocialmediaapp.ui.models.Comment
 import com.example.mysocialmediaapp.ui.models.User
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.github.marlonlom.utilities.timeago.TimeAgo
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,8 +18,7 @@ import com.squareup.picasso.Picasso
 
 
 class CommentsAdapter(
-    val context: Context,
-    private val commentList : ArrayList<Comment> = ArrayList()
+    private var commentList : ArrayList<Comment>
 ) : RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
 
     class CommentViewHolder(val binding: CommentsSampleBinding) : RecyclerView.ViewHolder(binding.root)

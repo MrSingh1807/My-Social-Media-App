@@ -9,6 +9,7 @@ import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.StoryRvDesignBinding
 import com.example.mysocialmediaapp.ui.models.StoryModel
 import com.example.mysocialmediaapp.ui.models.User
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -22,7 +23,8 @@ import omari.hamza.storyview.model.MyStory
 
 class StoryAdapter(
     val context: Context,
-    private var storyModel: ArrayList<StoryModel> = ArrayList()
+    private var storyModel: ArrayList<StoryModel> = ArrayList(),
+    private val mainViewModel: MainViewModel
 ) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
 
@@ -45,9 +47,8 @@ class StoryAdapter(
 
             holder.binding.statusCircleCSV.setPortionsCount(story.stories.size)
 
-            FirebaseDatabase.getInstance().reference
-                .child("Users")
-                .child(story.storyBy!!).addValueEventListener(object : ValueEventListener {
+            mainViewModel.userFirebaseDB.child(story.storyBy!!)
+                .addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val user = snapshot.getValue(User::class.java)!!
                         Picasso.get().load(user.profilePhoto)

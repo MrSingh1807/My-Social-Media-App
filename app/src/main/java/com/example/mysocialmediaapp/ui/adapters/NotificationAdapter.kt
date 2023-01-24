@@ -12,6 +12,7 @@ import com.example.mysocialmediaapp.databinding.TabNotificationRecyclerViewBindi
 import com.example.mysocialmediaapp.ui.UI.CommentsActivity
 import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.User
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -21,7 +22,8 @@ import com.squareup.picasso.Picasso
 
 class NotificationAdapter(
     val context: Context,
-    private var notificationModel: ArrayList<NotificationModel> = ArrayList()
+    private var notificationModel: ArrayList<NotificationModel> = ArrayList(),
+    private val mainViewModel: MainViewModel
 ) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
     class NotificationViewHolder(val binding: TabNotificationRecyclerViewBinding) :
@@ -39,8 +41,7 @@ class NotificationAdapter(
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
         val notification = notificationModel[position]
 
-        val firebaseDatabase = FirebaseDatabase.getInstance().reference
-        firebaseDatabase.child("Users")
+        mainViewModel.userFirebaseDB
             .child(notification.notificationBy!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -63,7 +64,7 @@ class NotificationAdapter(
         holder.binding.openNotificationVG.setOnClickListener {
             if (!notification.type.equals("follow")) {
 
-                FirebaseDatabase.getInstance().reference.child("Notification")
+               mainViewModel.notificationFirebaseDB
                     .child(notification.postID!!)
                     .child(notification.notificationId!!)
                     .child("checkOpen")

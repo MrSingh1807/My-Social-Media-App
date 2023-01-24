@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.databinding.FragmentHomeBinding
 import com.example.mysocialmediaapp.ui.adapters.PostAdapter
@@ -17,12 +18,10 @@ import com.example.mysocialmediaapp.ui.adapters.StoryAdapter
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.StoryModel
 import com.example.mysocialmediaapp.ui.models.UserStories
-import com.google.firebase.auth.FirebaseAuth
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
@@ -36,17 +35,7 @@ class HomeFragment : Fragment() {
     private var storyList: ArrayList<StoryModel> = ArrayList()
     private var postList: ArrayList<Post> = ArrayList()
 
-    private lateinit var firebaseDatabase: FirebaseDatabase
-    private lateinit var firebaseStorage: FirebaseStorage
-    private lateinit var firebaseAuth: FirebaseAuth
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseDatabase = FirebaseDatabase.getInstance()
-        firebaseStorage = FirebaseStorage.getInstance()
-    }
+    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,25 +66,22 @@ class HomeFragment : Fragment() {
                 val galleryUri = result.data?.data!!
 //                binding.postBackgroundIV.setImageURI(galleryUri)
 
-                val uid = FirebaseAuth.getInstance().uid!!
-                val refrence = firebaseStorage.reference.child("stories").child(uid)
+                val refrence = mainViewModel.storiesFirebaseStorage.child(mainViewModel.uid!!)
                     .child(Date().time.toString())
                 refrence.putFile(galleryUri).addOnSuccessListener {
 
                     refrence.downloadUrl.addOnSuccessListener { imageUri ->
                         val story = StoryModel(storyAt = Date().time)
-                        firebaseDatabase.reference.child("stories").child(uid).child("postedBy")
+                        mainViewModel.storiesFirebaseDB.child(mainViewModel.uid!!).child("postedBy")
                             .setValue(story).addOnSuccessListener {
                                 val userStories = UserStories(imageUri.toString(), story.storyAt)
 
-                                firebaseDatabase.reference.child("stories")
-                                    .child(uid)
-                                    .child("userStories")
-                                    .push()
+                                mainViewModel.storiesFirebaseDB.child(mainViewModel.uid!!)
+                                    .child("userStories").push()
                                     .setValue(userStories)
 
                                 Toast.makeText(
-                                    requireContext(),
+                                    context,
                                     "Story Posted Successfully",
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -106,67 +92,66 @@ class HomeFragment : Fragment() {
         }
 
     private fun setUpStoryRecyclerView() {
-        val storyAdapter = StoryAdapter(requireContext(), storyList)
+        val storyAdapter = StoryAdapter(requireContext(), storyList, mainViewModel)
 
         binding.storyRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.storyRecyclerView.isNestedScrollingEnabled = false
         binding.storyRecyclerView.adapter = storyAdapter
 
-        firebaseDatabase.reference.child("stories")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    storyList.clear()
-                    if (snapshot.exists()) {
-                        for (dataSnapShot in snapshot.children) {
-                            val stories = ArrayList<UserStories>()
-                            for (snap in dataSnapShot.child("userStories").children) {
-                                val userStory = snap.getValue(UserStories::class.java)!!
-                                stories.add(userStory)
-                            }
-
-                            val story = StoryModel(
-                                storyBy = dataSnapShot.key,
-//                                storyAt = dataSnapShot.child("postedBy").getValue(Long::class.java),
-                                stories = stories
-                            )
-                            storyList.add(story)
+        mainViewModel.storiesFirebaseDB.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                storyList.clear()
+                if (snapshot.exists()) {
+                    for (dataSnapShot in snapshot.children) {
+                        val stories = ArrayList<UserStories>()
+                        for (snap in dataSnapShot.child("userStories").children) {
+                            val userStory = snap.getValue(UserStories::class.java)!!
+                            stories.add(userStory)
                         }
-                        storyAdapter.notifyDataSetChanged()
+
+                        val story = StoryModel(
+                            storyBy = dataSnapShot.key,
+//                                storyAt = dataSnapShot.child("postedBy").getValue(Long::class.java),
+                            stories = stories
+                        )
+                        storyList.add(story)
                     }
+                    storyAdapter.notifyDataSetChanged()
                 }
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
-
     private fun setUpDashBoardRecyclerView() {
         showShimmerEffect()
         binding.dashBoardRV.layoutManager = LinearLayoutManager(requireContext())
         binding.storyRecyclerView.isNestedScrollingEnabled = false
-        val postAdapter = PostAdapter(requireContext(), postList)
+        val postAdapter = PostAdapter(requireContext(), postList, mainViewModel)
         binding.dashBoardRV.adapter = postAdapter
 
-        firebaseDatabase.reference.child("posts")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    postList.clear()
-                    for (dataSnapshot in snapshot.children) {
-                        val post = dataSnapshot.getValue(Post::class.java)!!
-                        post.postID = dataSnapshot.key
-                        postList.add(post)
-                    }
-                    hideShimmerEffect()
-                    postAdapter.notifyDataSetChanged()
+        mainViewModel.postFirebaseDB.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                postList.clear()
+                for (dataSnapshot in snapshot.children) {
+                    val post = dataSnapshot.getValue(Post::class.java)!!
+                    post.postID = dataSnapshot.key
+                    postList.add(post)
                 }
-                override fun onCancelled(error: DatabaseError) {
-                    showShimmerEffect()
-                }
-            })
+                hideShimmerEffect()
+                postAdapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                showShimmerEffect()
+            }
+        })
 
     }
+
     private fun showShimmerEffect() {
         binding.shimmerFrameLayout.startShimmer()
         binding.shimmerFrameLayout.visibility = View.VISIBLE
@@ -178,6 +163,7 @@ class HomeFragment : Fragment() {
         binding.shimmerFrameLayout.visibility = View.GONE
         binding.dashBoardRV.visibility = View.VISIBLE
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

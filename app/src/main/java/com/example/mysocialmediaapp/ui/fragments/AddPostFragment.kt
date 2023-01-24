@@ -2,33 +2,30 @@ package com.example.mysocialmediaapp.ui.fragments
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentAddPostBinding
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.User
-import com.google.firebase.auth.FirebaseAuth
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.util.*
 
@@ -39,19 +36,12 @@ class AddPostFragment : Fragment() {
 
     private lateinit var uri: Uri
 
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firebaseDatabase: FirebaseDatabase
-    private lateinit var firebaseStorage: FirebaseStorage
-
-
+    private lateinit var mainViewModel : MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseDatabase = FirebaseDatabase.getInstance()
-        firebaseStorage = FirebaseStorage.getInstance()
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,8 +50,8 @@ class AddPostFragment : Fragment() {
         // Inflate the layout for this fragment
 
         // Fetch Data from Firebase DataBase
-        firebaseDatabase.reference.child("Users")
-            .child(firebaseAuth.uid!!).addListenerForSingleValueEvent(object : ValueEventListener {
+        mainViewModel.userFirebaseDB
+            .child(mainViewModel.uid!!).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val user = snapshot.getValue(User::class.java)!!
@@ -116,18 +106,18 @@ class AddPostFragment : Fragment() {
 
         // Buttons
         binding.postBTN.setOnClickListener {
-            val refrence = firebaseStorage.reference.child("posts")
-                .child(firebaseAuth.uid!!)
+            val refrence =  mainViewModel.postsFirebaseStorage
+                .child(mainViewModel.uid!!)
                 .child(Date().time.toString())
             refrence.putFile(uri).addOnSuccessListener {
                 refrence.downloadUrl.addOnSuccessListener {
                     val post = Post(
                         postImage = it.toString(),
-                        postedBy = firebaseAuth.uid!!,
+                        postedBy = mainViewModel.uid!!,
                         postDescription = binding.postDescriptionET.text.toString(),
                         postedAt = Date().time,
                     )
-                    firebaseDatabase.reference.child("posts").child(firebaseAuth.uid!!)
+                    mainViewModel.postFirebaseDB.child(mainViewModel.uid!!)
                         .setValue(post).addOnSuccessListener {
                             Toast.makeText(context, "Posted Successful", Toast.LENGTH_SHORT).show()
 

@@ -21,8 +21,6 @@ class LogInFragment : Fragment() {
     private var _binding: FragmentLogInBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth: FirebaseAuth
-
     private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +35,6 @@ class LogInFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentLogInBinding.inflate(inflater, container, false)
 
-        auth = FirebaseAuth.getInstance()
-
         return binding.root
     }
 
@@ -50,7 +46,7 @@ class LogInFragment : Fragment() {
             val password = binding.singUpPasswordET.text.toString().trim()
 
             if (mainViewModel.validateEmail(email) || mainViewModel.validatePassword(password)) {
-                auth.signInWithEmailAndPassword(email, password)
+                mainViewModel.firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnSuccessListener {
                         Toast.makeText(context, "User Signed In", Toast.LENGTH_SHORT).show()
 

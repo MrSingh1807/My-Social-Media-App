@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentProfileBinding
@@ -18,12 +19,10 @@ import com.example.mysocialmediaapp.ui.UI.LogInActivity
 import com.example.mysocialmediaapp.ui.adapters.FollowerAdapter
 import com.example.mysocialmediaapp.ui.models.FollowModel
 import com.example.mysocialmediaapp.ui.models.User
-import com.google.firebase.auth.FirebaseAuth
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
@@ -37,9 +36,7 @@ class ProfileFragment : Fragment() {
 
     private var myFriendsList: ArrayList<FollowModel> = ArrayList()
 
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firebaseStorage: FirebaseStorage
-    private lateinit var firebaseDatabase: FirebaseDatabase
+    private val mainViewModel by viewModels<MainViewModel>()
 
 
     override fun onCreateView(
@@ -48,10 +45,6 @@ class ProfileFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-
-        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseStorage = FirebaseStorage.getInstance()
-        firebaseDatabase = FirebaseDatabase.getInstance()
 
         binding.changeCoverProfileView.setOnClickListener {
             val dialog = AlertDialog.Builder(requireContext())
@@ -90,9 +83,8 @@ class ProfileFragment : Fragment() {
             alert.show()
         }
 
-
         //Fetch User Data from database
-        firebaseDatabase.reference.child("Users").child(firebaseAuth.uid!!)
+        mainViewModel.userFirebaseDB.child(mainViewModel.uid!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
@@ -130,7 +122,7 @@ class ProfileFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return if (menuItem.itemId == R.id.logOut) {
-                    firebaseAuth.signOut()
+                    mainViewModel.firebaseAuth.signOut()
                     startActivity(Intent(context, LogInActivity::class.java))
                     true
                 } else {
@@ -146,13 +138,12 @@ class ProfileFragment : Fragment() {
                 val galleryUri = result.data?.data!!
                 binding.coverProfileIV.setImageURI(galleryUri)
 
-                val uid = FirebaseAuth.getInstance().uid!!
-                val refrence = firebaseStorage.reference.child("cover_photo").child(uid)
+                val refrence = mainViewModel.coverPhotoFirebaseStorage.child(mainViewModel.uid!!)
                 refrence.putFile(galleryUri).addOnSuccessListener {
                     Toast.makeText(requireContext(), "Cover Pic Saved", Toast.LENGTH_SHORT).show()
 
                     refrence.downloadUrl.addOnSuccessListener {
-                        firebaseDatabase.reference.child("Users").child(uid).child("coverPhoto")
+                        mainViewModel.userFirebaseDB.child(mainViewModel.uid!!).child("coverPhoto")
                             .setValue(it.toString())
                     }
                 }
@@ -171,8 +162,7 @@ class ProfileFragment : Fragment() {
                     cameraBitmap.recycle()
 
 
-                    val uid = FirebaseAuth.getInstance().uid!!
-                    val refrence = firebaseStorage.reference.child("cover_photo").child(uid)
+                    val refrence = mainViewModel.coverPhotoFirebaseStorage.child(mainViewModel.uid!!)
                     refrence.putBytes(cameraBites).addOnSuccessListener {
                         Toast.makeText(requireContext(), "Cover Pic Saved", Toast.LENGTH_SHORT)
                             .show()
@@ -180,20 +170,18 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
-
     private val pickProfileImageFromGallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val galleryUri = result.data?.data!!
                 binding.profileImgVw.setImageURI(galleryUri)
 
-                val uid = FirebaseAuth.getInstance().uid!!
-                val refrence = firebaseStorage.reference.child("profile_photo").child(uid)
+                val refrence = mainViewModel.profilePhotoFirebaseStorage.child(mainViewModel.uid!!)
                 refrence.putFile(galleryUri).addOnSuccessListener {
                     Toast.makeText(requireContext(), "Profile Pic Saved", Toast.LENGTH_SHORT).show()
 
                     refrence.downloadUrl.addOnSuccessListener {
-                        firebaseDatabase.reference.child("Users").child(uid).child("profilePhoto")
+                        mainViewModel.userFirebaseDB.child(mainViewModel.uid!!).child("profilePhoto")
                             .setValue(it.toString())
                     }
                 }
@@ -211,8 +199,7 @@ class ProfileFragment : Fragment() {
                     val cameraBites = stream.toByteArray()
                     cameraBitmap.recycle()
 
-                    val uid = FirebaseAuth.getInstance().uid!!
-                    val refrence = firebaseStorage.reference.child("profile_photo").child(uid)
+                    val refrence = mainViewModel.profilePhotoFirebaseStorage.child(mainViewModel.uid!!)
                     refrence.putBytes(cameraBites).addOnSuccessListener {
                         Toast.makeText(requireContext(), "Profile Pic Saved", Toast.LENGTH_SHORT)
                             .show()
@@ -224,16 +211,15 @@ class ProfileFragment : Fragment() {
 
     private fun setFriendsListRecyclerView() {
 
-        val friendAdapter = FollowerAdapter(requireContext(), myFriendsList)
+        val friendAdapter = FollowerAdapter(requireContext(), myFriendsList, mainViewModel)
         binding.friendsProfileRV.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.friendsProfileRV.isNestedScrollingEnabled = false
         binding.friendsProfileRV.adapter = friendAdapter
 
         //get Data from Firebase
-        firebaseDatabase.reference
-            .child("Users")
-            .child(firebaseAuth.uid!!)
+        mainViewModel.userFirebaseDB
+            .child(mainViewModel.uid!!)
             .child("follower")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
