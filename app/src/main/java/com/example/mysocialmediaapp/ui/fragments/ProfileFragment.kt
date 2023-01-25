@@ -9,9 +9,12 @@ import android.provider.MediaStore
 import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.FragmentProfileBinding
@@ -45,6 +48,19 @@ class ProfileFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.log_out, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                mainViewModel.firebaseAuth.signOut()
+                return true
+            }
+        },viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         binding.changeCoverProfileView.setOnClickListener {
             val dialog = AlertDialog.Builder(requireContext())
@@ -89,11 +105,20 @@ class ProfileFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val user = snapshot.getValue(User::class.java)!!
-                        Picasso.get().load(user.coverPhoto).placeholder(R.drawable.ic_image_search)
-                            .into(binding.coverProfileIV)
-                        Picasso.get().load(user.profilePhoto)
-                            .placeholder(R.drawable.ic_image_search)
-                            .into(binding.profileImgVw)
+                        if (user.coverPhoto.isNullOrEmpty()){
+                            binding.coverProfileIV.setImageResource(R.drawable.kid)
+                        }else {
+                            Picasso.get().load(user.coverPhoto).placeholder(R.drawable.ic_image_search)
+                                .into(binding.coverProfileIV)
+                        }
+
+                        if (user.profilePhoto.isNullOrEmpty()){
+                            binding.profileImgVw.setImageResource(R.drawable.cute_dog)
+                        } else {
+                            Picasso.get().load(user.profilePhoto)
+                                .placeholder(R.drawable.ic_image_search)
+                                .into(binding.profileImgVw)
+                        }
 
                         binding.userNameTV.text = user.name
                         binding.professionTV.text = user.profession
@@ -123,7 +148,8 @@ class ProfileFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return if (menuItem.itemId == R.id.logOut) {
                     mainViewModel.firebaseAuth.signOut()
-                    startActivity(Intent(context, LogInActivity::class.java))
+
+                    startActivity(Intent(requireActivity(), LogInActivity::class.java))
                     true
                 } else {
                     false

@@ -1,22 +1,18 @@
 package com.example.mysocialmediaapp.ui.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mysocialmediaapp.R
 import com.example.mysocialmediaapp.databinding.DashboardRvSampleBinding
-import com.example.mysocialmediaapp.ui.UI.CommentsActivity
 import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.User
 import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import java.util.Date
@@ -24,7 +20,8 @@ import java.util.Date
 class PostAdapter(
     val context: Context,
     private var postModel: ArrayList<Post> = ArrayList(),
-    private val mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel,
+    private var postClickListener: PostClickListener
 ) : RecyclerView.Adapter<PostAdapter.DashBoardHolder>() {
 
     class DashBoardHolder(val binding: DashboardRvSampleBinding) :
@@ -116,13 +113,12 @@ class PostAdapter(
             })
 
         holder.binding.commentImgVw.setOnClickListener {
-            val intent = Intent(context, CommentsActivity::class.java)
-            intent.putExtra("postID", post.postID)
-            intent.putExtra("postedBy", post.postedBy)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
+            postClickListener.onClick(post)
         }
-
     }
 
+}
+
+interface PostClickListener{
+    fun onClick(post: Post)
 }

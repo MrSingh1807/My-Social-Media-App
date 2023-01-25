@@ -11,9 +11,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.databinding.FragmentHomeBinding
 import com.example.mysocialmediaapp.ui.adapters.PostAdapter
+import com.example.mysocialmediaapp.ui.adapters.PostClickListener
 import com.example.mysocialmediaapp.ui.adapters.StoryAdapter
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.StoryModel
@@ -112,7 +114,7 @@ class HomeFragment : Fragment() {
 
                         val story = StoryModel(
                             storyBy = dataSnapShot.key,
-//                                storyAt = dataSnapShot.child("postedBy").getValue(Long::class.java),
+//                            storyAt = dataSnapShot.child("postedBy").getValue(Long::class.java),
                             stories = stories
                         )
                         storyList.add(story)
@@ -126,11 +128,21 @@ class HomeFragment : Fragment() {
             }
         })
     }
+
     private fun setUpDashBoardRecyclerView() {
         showShimmerEffect()
         binding.dashBoardRV.layoutManager = LinearLayoutManager(requireContext())
         binding.storyRecyclerView.isNestedScrollingEnabled = false
-        val postAdapter = PostAdapter(requireContext(), postList, mainViewModel)
+        val postAdapter =
+            PostAdapter(requireContext(), postList, mainViewModel, object : PostClickListener {
+                override fun onClick(post: Post) {
+
+                    val a = CommentBottomSheetFragment()
+                    a.postID = post.postID!!
+                    a.postedBy = post.postedBy!!
+                    a.show(requireActivity().supportFragmentManager, "xyz")
+                }
+            })
         binding.dashBoardRV.adapter = postAdapter
 
         mainViewModel.postFirebaseDB.addValueEventListener(object : ValueEventListener {

@@ -46,6 +46,7 @@ class SearchFragment : Fragment() {
 
         mainViewModel.userFirebaseDB.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                userList.clear()
                 for ( DataSnapShot in snapshot.children){
                     val user = DataSnapShot.getValue(User::class.java)
                     user?.userID = DataSnapShot.key

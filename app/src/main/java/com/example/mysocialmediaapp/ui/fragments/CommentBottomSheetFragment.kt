@@ -1,55 +1,54 @@
-package com.example.mysocialmediaapp.ui.UI
+package com.example.mysocialmediaapp.ui.fragments
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysocialmediaapp.R
-import com.example.mysocialmediaapp.databinding.ActivityCommentsBinding
+import com.example.mysocialmediaapp.databinding.FragmentCommentBottomSheetBinding
 import com.example.mysocialmediaapp.ui.adapters.CommentsAdapter
 import com.example.mysocialmediaapp.ui.models.Comment
 import com.example.mysocialmediaapp.ui.models.NotificationModel
 import com.example.mysocialmediaapp.ui.models.Post
 import com.example.mysocialmediaapp.ui.models.User
+import com.example.mysocialmediaapp.ui.viewmodels.MainViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
-import java.util.Date
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import kotlin.collections.ArrayList
 
-class CommentsActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class CommentBottomSheetFragment : BottomSheetDialogFragment() {
 
-    private lateinit var binding: ActivityCommentsBinding
+    private var _binding: FragmentCommentBottomSheetBinding? = null
+    private val binding get() = _binding!!
+
     lateinit var postID: String
     lateinit var postedBy: String
 
     private val commentsList: ArrayList<Comment> = ArrayList()
-
-
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firebaseDatabase: FirebaseDatabase
+    private val mainViewModel by viewModels<MainViewModel>()
 
     private val commentsAdapter by lazy { CommentsAdapter(commentsList) }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCommentsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-        this@CommentsActivity.title = "Comments"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentCommentBottomSheetBinding.inflate(inflater, container, false)
 
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseDatabase = FirebaseDatabase.getInstance()
-
-        postID = intent.getStringExtra("postID").toString()
-        postedBy = intent.getStringExtra("postedBy").toString()
-
-        firebaseDatabase.reference.child("posts")
+        mainViewModel.postFirebaseDB
             .child(postID).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val post = snapshot.getValue(Post::class.java)!!
@@ -69,7 +68,7 @@ class CommentsActivity : AppCompatActivity() {
 
             })
 
-        firebaseDatabase.reference.child("Users")
+        mainViewModel.userFirebaseDB
             .child(postedBy).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val user = snapshot.getValue(User::class.java)!!
@@ -93,12 +92,11 @@ class CommentsActivity : AppCompatActivity() {
             )
 
 
-            firebaseDatabase.reference.child("posts").child(postID)
+            mainViewModel.postFirebaseDB.child(postID)
                 .child("comments")
                 .push()
                 .setValue(comment).addOnSuccessListener {
-                    firebaseDatabase.reference.child("posts")
-                        .child(postID)
+                    mainViewModel.postFirebaseDB.child(postID)
                         .child("commentCount")
                         .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
@@ -106,26 +104,25 @@ class CommentsActivity : AppCompatActivity() {
                                 if (snapshot.exists()) {
                                     commentCount = snapshot.getValue(Int::class.java)!!
                                 }
-                                firebaseDatabase.reference.child("posts").child(postID)
+                                mainViewModel.postFirebaseDB.child(postID)
                                     .child("commentCount")
                                     .setValue(commentCount + 1).addOnSuccessListener {
                                         binding.postCommentET.setText("")
                                         Toast.makeText(
-                                            this@CommentsActivity,
+                                            context,
                                             "Commented",
                                             Toast.LENGTH_SHORT
                                         ).show()
 
                                         val notification = NotificationModel(
-                                            notificationBy = firebaseAuth.uid,
+                                            notificationBy = mainViewModel.uid,
                                             notificationAt = Date().time,
                                             postID = postID,
                                             postedBy = postedBy,
                                             type = "comment"
                                         )
 
-                                        firebaseDatabase.reference.child("Notification")
-                                            .child(postedBy).push()
+                                        mainViewModel.notificationFirebaseDB.child(postedBy).push()
                                             .setValue(notification)
                                     }
                             }
@@ -138,20 +135,18 @@ class CommentsActivity : AppCompatActivity() {
         }
 
         setUpCommentsRecyclerView()
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
-        return super.onOptionsItemSelected(item)
+
+        return binding.root
     }
 
     private fun setUpCommentsRecyclerView() {
 
 
-        binding.commentsRV.layoutManager = LinearLayoutManager(this)
+        binding.commentsRV.layoutManager = LinearLayoutManager(requireContext())
         binding.commentsRV.adapter = commentsAdapter
 
-        firebaseDatabase.reference.child("posts").child(postID)
+        mainViewModel.postFirebaseDB.child(postID)
             .child("comments").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     commentsList.clear()
@@ -168,4 +163,10 @@ class CommentsActivity : AppCompatActivity() {
 
             })
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

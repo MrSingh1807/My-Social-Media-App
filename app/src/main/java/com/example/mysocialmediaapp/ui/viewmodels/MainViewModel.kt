@@ -1,6 +1,5 @@
 package com.example.mysocialmediaapp.ui.viewmodels
 
-import android.app.Application
 import android.content.Context
 import android.util.Patterns
 import android.widget.Toast
@@ -9,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -52,7 +50,6 @@ class MainViewModel @Inject constructor(
         }
         return false
     }
-
     fun validatePassword(passWord: String): Boolean {
 
         if (passWord.isEmpty()) {

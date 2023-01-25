@@ -55,9 +55,14 @@ class AddPostFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val user = snapshot.getValue(User::class.java)!!
-                        Picasso.get().load(user.profilePhoto)
-                            .placeholder(R.drawable.cute_dog)
-                            .into(binding.profileImgVw)
+
+                        if (user.profilePhoto.isNullOrEmpty()){
+                            binding.profileImgVw.setImageResource(R.drawable.cute_dog)
+                        } else {
+                            Picasso.get().load(user.profilePhoto)
+                                .placeholder(R.drawable.cute_dog)
+                                .into(binding.profileImgVw)
+                        }
 
                         binding.userNameTV.text = user.name
                         binding.userProfessionTV.text = user.profession
@@ -71,6 +76,29 @@ class AddPostFragment : Fragment() {
 
         return binding.root
     }
+
+
+    private val pickCoverImageFromGallery =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                uri = result.data?.data!!
+                binding.previewUploadedPostImageIV.visibility = View.VISIBLE
+                binding.previewUploadedPostImageIV.setImageURI(uri)
+
+                showPostBTN(R.drawable.follow_btn_bg, R.color.white, true)
+            }
+        }
+    private val pickCoverImageFromCamera =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                if (it.data != null) {
+                    val cameraBitmap = it.data?.extras?.get("data") as Bitmap
+
+                    binding.previewUploadedPostImageIV.visibility = View.VISIBLE
+                    binding.previewUploadedPostImageIV.setImageBitmap(cameraBitmap)
+                }
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -129,29 +157,6 @@ class AddPostFragment : Fragment() {
             }
         }
     }
-
-
-    private val pickCoverImageFromGallery =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                uri = result.data?.data!!
-                binding.previewUploadedPostImageIV.visibility = View.VISIBLE
-                binding.previewUploadedPostImageIV.setImageURI(uri)
-
-                showPostBTN(R.drawable.follow_btn_bg, R.color.white, true)
-            }
-        }
-    private val pickCoverImageFromCamera =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                if (it.data != null) {
-                    val cameraBitmap = it.data?.extras?.get("data") as Bitmap
-
-                    binding.previewUploadedPostImageIV.visibility = View.VISIBLE
-                    binding.previewUploadedPostImageIV.setImageBitmap(cameraBitmap)
-                }
-            }
-        }
 
     private fun showPostBTN(drawable: Int, color: Int, isEnabled: Boolean) {
         binding.postBTN.setBackgroundDrawable(context?.let {

@@ -33,7 +33,6 @@ class FollowerAdapter(
     }
 
     override fun onBindViewHolder(holder: MyFriendProfileViewHolder, position: Int) {
-//        holder.binding.friendsImageIV.setImageResource(myFriendsModel[position].profileImage)
 
         val friendsList = myFriendsModel[position]
         mainViewModel.userFirebaseDB
