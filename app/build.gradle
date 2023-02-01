@@ -55,17 +55,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
-    // Room components
-    implementation "androidx.room:room-runtime:2.4.3"
-    kapt "androidx.room:room-compiler:2.4.3"
-
-    // DataStore
-    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha01"
-
-    // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.44.1"
     kapt "com.google.dagger:hilt-android-compiler:2.44.1"
@@ -97,11 +86,11 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.8'
-    //TimeAgo Library
+    // TimeAgo Library
     implementation 'com.github.marlonlom:timeago:4.0.3'
     // CircularStatusView
     implementation 'com.github.3llomi:CircularStatusView:V1.0.3'
-    //StoryView
+    // StoryView
     implementation 'com.github.OMARIHAMZA:StoryView:1.0.2-alpha'
     // Shimmer
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
