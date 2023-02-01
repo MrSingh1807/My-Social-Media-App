@@ -19,7 +19,7 @@
 14. Material Design
 15. Nice looking UI Design
 
-# Some Third party Libraries
+# Some Third Party Libraries
 1. Circular ImageView
 2. Picasso
 3. TimeAgo Library
