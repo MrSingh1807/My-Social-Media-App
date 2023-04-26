@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
     val firebaseDatabase = FirebaseDatabase.getInstance()
     val firebaseStorage = FirebaseStorage.getInstance()
 
-    //    Firebase Realtime DataBase
+    //    Firebase Authentication
     val uid = firebaseAuth.uid
     val currentUserUID = firebaseAuth.currentUser?.uid
 

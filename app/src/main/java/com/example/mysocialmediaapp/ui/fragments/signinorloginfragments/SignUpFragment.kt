@@ -45,10 +45,10 @@ class SignUpFragment : Fragment() {
             val email = binding.signUpEmailET.text.toString().trim()
             val password = binding.singUpPasswordET.text.toString().trim()
 
-            if (mainViewModel.validateEmail(email) || mainViewModel.validatePassword(password)) {
+            if (mainViewModel.validateEmail(email) && mainViewModel.validatePassword(password)) {
                 mainViewModel.firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnSuccessListener {
-                        if (userName.isNotEmpty() || profession.isNotEmpty()) {
+                        if (userName.isNotEmpty() && profession.isNotEmpty()) {
                             val user = User(userName, profession, email = email, password = password)
                             val id = it.user!!.uid
                            mainViewModel.userFirebaseDB.child(id).setValue(user)

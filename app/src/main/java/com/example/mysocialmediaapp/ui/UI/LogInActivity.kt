@@ -12,9 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LogInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLogInBinding
-
     private lateinit var mainViewModel: MainViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
